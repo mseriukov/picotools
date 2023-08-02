@@ -9,6 +9,11 @@ public struct CPY_T1: Instruction {
     let d: UInt16
     let m: UInt16
 
+    public init(d: UInt16, m: UInt16) {
+        self.d = d
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         MOV_Register_T1(d: d, m: m).encode()
     }
@@ -29,6 +34,11 @@ public struct CPY_T2: Instruction {
 
     let d: UInt16
     let m: UInt16
+
+    public init(d: UInt16, m: UInt16) {
+        self.d = d
+        self.m = m
+    }
 
     public func encode() -> [UInt16] {
         MOV_Register_T2(d: d, m: m).encode()

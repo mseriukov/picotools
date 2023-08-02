@@ -11,6 +11,10 @@ public struct BLX: Instruction {
 
     let m: UInt16
 
+    public init(m: UInt16) {
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set4(&low, m, 3)

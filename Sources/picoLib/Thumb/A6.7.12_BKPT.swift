@@ -8,7 +8,12 @@
 public struct BKPT: Instruction {
     public static var sig: [UInt16] = [0b1011_1110_0000_0000] // 0xbe00
     public static var msk: [UInt16] = [0b1111_1111_0000_0000]
+
     let imm8: UInt16
+
+    public init(imm8: UInt16) {
+        self.imm8 = imm8
+    }
 
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]

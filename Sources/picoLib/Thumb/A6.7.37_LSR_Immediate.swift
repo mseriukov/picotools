@@ -13,6 +13,12 @@ public struct LSR_Immediate: Instruction {
     let m: UInt16
     let imm5: UInt16
 
+    public init(d: UInt16, m: UInt16, imm5: UInt16) {
+        self.d = d
+        self.m = m
+        self.imm5 = imm5
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)

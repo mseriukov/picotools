@@ -12,6 +12,11 @@ public struct PUSH: Instruction {
     let registerList: UInt16
     let m: Bool
 
+    public init(registerList: UInt16, m: Bool) {
+        self.registerList = registerList
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         writeBit(&low, m, 8)

@@ -12,6 +12,11 @@ public struct RSB_Immediate: Instruction {
     let d: UInt16
     let n: UInt16
 
+    public init(d: UInt16, n: UInt16) {
+        self.d = d
+        self.n = n
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)

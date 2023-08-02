@@ -9,4 +9,3 @@
 // • LSR (immediate) on page A6-152
 // • LSR (register) on page A6-153
 // • ROR (register) on page A6-171.
-

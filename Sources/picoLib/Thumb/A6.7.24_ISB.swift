@@ -8,7 +8,12 @@
 public struct ISB: Instruction {
     public static var sig: [UInt16] = [0b1111_0011_1011_1111, 0b1000_1111_0110_0000] // 0xf3bf, 0x8f60
     public static var msk: [UInt16] = [0b1111_1111_1111_1111, 0b1111_1111_1111_0000]
+    
     let option: UInt16
+
+    public init(option: UInt16) {
+        self.option = option
+    }
 
     public func encode() -> [UInt16] {
         let high: UInt16 = Self.sig[0]

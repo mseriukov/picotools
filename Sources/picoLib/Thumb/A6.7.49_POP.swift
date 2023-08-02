@@ -12,6 +12,11 @@ public struct POP: Instruction {
     let registerList: UInt16
     let p: Bool
 
+    public init(registerList: UInt16, p: Bool) {
+        self.registerList = registerList
+        self.p = p
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         writeBit(&low, p, 8)
@@ -28,4 +33,3 @@ public struct POP: Instruction {
         )
     }
 }
-

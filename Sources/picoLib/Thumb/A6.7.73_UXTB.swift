@@ -12,6 +12,11 @@ public struct UXTB: Instruction {
     let d: UInt16
     let m: UInt16
 
+    public init(d: UInt16, m: UInt16) {
+        self.d = d
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)

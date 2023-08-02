@@ -13,6 +13,12 @@ public struct STR_Immediate_T1: Instruction {
     let n: UInt16
     let imm5: UInt16
 
+    public init(t: UInt16, n: UInt16, imm5: UInt16) {
+        self.t = t
+        self.n = n
+        self.imm5 = imm5
+    }
+
     public func encode() -> [UInt16] {
         guard imm5 % 4 == 0 else { fatalError("STR immediate should be 4 bytes aligned.") }
         let imm5 = imm5 >> 2
@@ -45,6 +51,11 @@ struct STR_Immediate_T2: Instruction {
     
     let t: UInt16
     let imm8: UInt16
+
+    public init(t: UInt16, imm8: UInt16) {
+        self.t = t
+        self.imm8 = imm8
+    }
 
     public func encode() -> [UInt16] {
         guard imm8 % 4 == 0 else { fatalError("STR immediate should be 4 bytes aligned.") }

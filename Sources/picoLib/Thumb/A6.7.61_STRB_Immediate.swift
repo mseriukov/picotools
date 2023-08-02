@@ -13,6 +13,12 @@ public struct STRB_Immediate: Instruction {
     let n: UInt16
     let imm5: UInt16
 
+    public init(t: UInt16, n: UInt16, imm5: UInt16) {
+        self.t = t
+        self.n = n
+        self.imm5 = imm5
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, t, 0)
@@ -31,5 +37,3 @@ public struct STRB_Immediate: Instruction {
         )
     }
 }
-
-

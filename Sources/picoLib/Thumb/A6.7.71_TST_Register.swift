@@ -12,6 +12,11 @@ public struct TST_Register: Instruction {
     let n: UInt16
     let m: UInt16
 
+    public init(n: UInt16, m: UInt16) {
+        self.n = n
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, n, 0)
@@ -28,4 +33,3 @@ public struct TST_Register: Instruction {
         )
     }
 }
-

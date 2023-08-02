@@ -11,6 +11,10 @@ public struct UDF_T1: Instruction {
     
     let imm8: UInt16
 
+    public init(imm8: UInt16) {
+        self.imm8 = imm8
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set8(&low, imm8, 0)
@@ -34,7 +38,12 @@ public struct UDF_T1: Instruction {
 public struct UDF_T2: Instruction {
     public static var sig: [UInt16] = [0b1111_0111_1111_0000, 0b1010_0000_0000_0000] // 0xf7f0, 0xa000
     public static var msk: [UInt16] = [0b1111_1111_1111_0000, 0b1111_0000_0000_0000]
+    
     let imm16: UInt16
+
+    public init(imm16: UInt16) {
+        self.imm16 = imm16
+    }
 
     public func encode() -> [UInt16] {
         var high: UInt16 = Self.sig[0]

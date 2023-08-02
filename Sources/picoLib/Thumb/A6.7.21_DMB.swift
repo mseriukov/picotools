@@ -11,6 +11,10 @@ public struct DMB: Instruction {
 
     let option: UInt16
 
+    public init(option: UInt16) {
+        self.option = option
+    }
+
     public func encode() -> [UInt16] {
         let high: UInt16 = Self.sig[0]
         var low: UInt16 = Self.sig[1]

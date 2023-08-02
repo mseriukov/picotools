@@ -13,6 +13,12 @@ public struct SUB_Immediate_T1: Instruction {
     let n: UInt16
     let imm3: UInt16
 
+    public init(d: UInt16, n: UInt16, imm3: UInt16) {
+        self.d = d
+        self.n = n
+        self.imm3 = imm3
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)
@@ -44,6 +50,11 @@ struct SUB_Immediate_T2: Instruction {
     let dn: UInt16
     let imm8: UInt16
 
+    public init(dn: UInt16, imm8: UInt16) {
+        self.dn = dn
+        self.imm8 = imm8
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, dn, 8)
@@ -60,5 +71,3 @@ struct SUB_Immediate_T2: Instruction {
         )
     }
 }
-
-

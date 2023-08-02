@@ -12,6 +12,11 @@ public struct ROR_Register: Instruction {
     let dn: UInt16
     let m: UInt16
 
+    public init(dn: UInt16, m: UInt16) {
+        self.dn = dn
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, dn, 0)

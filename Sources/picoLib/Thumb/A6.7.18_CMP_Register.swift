@@ -12,6 +12,11 @@ public struct CMP_Register_T1: Instruction {
     let n: UInt16
     let m: UInt16
 
+    public init(n: UInt16, m: UInt16) {
+        self.n = n
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         guard n < 8 && m < 8 else { fatalError("<Rn> and <Rm> should be both from r0-r7 for CMP T1 encoding.") }
         var low: UInt16 = Self.sig[0]
@@ -41,6 +46,11 @@ public struct CMP_Register_T2: Instruction {
 
     let n: UInt16
     let m: UInt16
+
+    public init(n: UInt16, m: UInt16) {
+        self.n = n
+        self.m = m
+    }
 
     public func encode() -> [UInt16] {
         guard n >= 8 || m >= 8 else { fatalError("<Rn> and <Rm> should be not both from r0-r7 for CMP T1 encoding.") }

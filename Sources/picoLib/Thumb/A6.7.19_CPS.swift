@@ -12,6 +12,10 @@ public struct CPS: Instruction {
 
     let ie: Bool
 
+    public init(ie: Bool) {
+        self.ie = ie
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         writeBit(&low, !ie, 4)

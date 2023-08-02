@@ -12,6 +12,11 @@ public struct MOV_Register_T1: Instruction {
     let d: UInt16
     let m: UInt16
 
+    public init(d: UInt16, m: UInt16) {
+        self.d = d
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 =  Self.sig[0]
         set2reg4(&low, r1: m, r2: d)
@@ -41,6 +46,11 @@ public struct MOV_Register_T2: Instruction {
     let d: UInt16
     let m: UInt16
 
+    public init(d: UInt16, m: UInt16) {
+        self.d = d
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)
@@ -57,5 +67,3 @@ public struct MOV_Register_T2: Instruction {
         )
     }
 }
-
-

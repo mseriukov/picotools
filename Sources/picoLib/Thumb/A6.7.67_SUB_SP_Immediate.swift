@@ -11,6 +11,10 @@ public struct SUB_SP_Immediate: Instruction {
     
     let imm7: UInt16
 
+    public init(imm7: UInt16) {
+        self.imm7 = imm7
+    }
+
     public func encode() -> [UInt16] {
         guard imm7 % 4 == 0 else { fatalError("Immediate should be 4 bytes aligned.") }
         let imm7 = imm7 >> 2

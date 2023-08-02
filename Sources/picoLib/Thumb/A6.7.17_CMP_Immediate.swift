@@ -12,6 +12,11 @@ public struct CMP_Immediate: Instruction {
     let n: UInt16
     let imm8: UInt16
 
+    public init(n: UInt16, imm8: UInt16) {
+        self.n = n
+        self.imm8 = imm8
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, n, 8)

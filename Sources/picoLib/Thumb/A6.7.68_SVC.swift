@@ -11,6 +11,10 @@ public struct SVC: Instruction {
     
     let imm8: UInt16
 
+    public init(imm8: UInt16) {
+        self.imm8 = imm8
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set8(&low, imm8, 0)
@@ -25,4 +29,3 @@ public struct SVC: Instruction {
         )
     }
 }
-

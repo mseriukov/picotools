@@ -9,6 +9,8 @@ public struct WFE: Instruction {
     public static var sig: [UInt16] = [0b1011_1111_0010_0000] // 0xBF20
     public static var msk: [UInt16] = [0b1111_1111_1111_1111]
 
+    public init() { }
+
     public func encode() -> [UInt16] {
         [Self.sig[0]]
     }

@@ -13,6 +13,12 @@ public struct ADD_Register_T1: Instruction {
     let n: UInt16
     let m: UInt16
 
+    public init(d: UInt16, n: UInt16, m: UInt16) {
+        self.d = d
+        self.n = n
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, d, 0)
@@ -31,7 +37,7 @@ public struct ADD_Register_T1: Instruction {
         )
     }
 }
-import Foundation
+
 // Encoding T2
 // ADD <Rdn>,<Rm>
 // All versions of the Thumb instruction set.
@@ -43,6 +49,11 @@ public struct ADD_Register_T2: Instruction {
 
     let dn: UInt16
     let m: UInt16
+
+    public init(dn: UInt16, m: UInt16) {
+        self.dn = dn
+        self.m = m
+    }
 
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]

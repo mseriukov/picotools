@@ -12,6 +12,11 @@ public struct B_T1: Instruction {
     let cond: UInt16
     let imm8: Int16
 
+    public init(cond: UInt16, imm8: Int16) {
+        self.cond = cond
+        self.imm8 = imm8
+    }
+
     public func encode() -> [UInt16] {
         guard cond != Condition.al else { fatalError("Consider using encoding T2 for condition AL.") }
         var low: UInt16 = Self.sig[0]
@@ -40,6 +45,10 @@ public struct B_T2: Instruction {
     public static var msk: [UInt16] = [0b1111_1000_0000_0000]
 
     let imm11: Int16
+
+    public init(imm11: Int16) {
+        self.imm11 = imm11
+    }
 
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]

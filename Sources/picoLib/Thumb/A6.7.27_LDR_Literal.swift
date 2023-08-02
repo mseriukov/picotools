@@ -12,6 +12,11 @@ public struct LDR_Literal: Instruction {
     let t: UInt16
     let offset: UInt16
 
+    public init(t: UInt16, offset: UInt16) {
+        self.t = t
+        self.offset = offset
+    }
+
     public func encode() -> [UInt16] {
         guard offset % 4 == 0 else { fatalError("LDR literal should have offset aligned by 4 bytes.") }
         let offset = offset >> 2

@@ -8,9 +8,14 @@
 public struct MUL: Instruction {
     public static var sig: [UInt16] = [0b0100_0011_0100_0000] // 0x4340
     public static var msk: [UInt16] = [0b1111_1111_1100_0000]
-    
+
     let n: UInt16
     let dm: UInt16
+
+    public init(n: UInt16, dm: UInt16) {
+        self.n = n
+        self.dm = dm
+    }
 
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]

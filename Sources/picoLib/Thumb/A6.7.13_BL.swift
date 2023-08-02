@@ -17,6 +17,10 @@ public struct BL: Instruction {
 
     let offset: Int32
 
+    public init(offset: Int32) {
+        self.offset = offset
+    }
+
     public func encode() -> [UInt16] {
         guard offset >= -16777216, offset <= 16777214 else { fatalError("BL offset is out of range.") }
         guard offset % 2 == 0 else { fatalError("BL offset is not even.") }

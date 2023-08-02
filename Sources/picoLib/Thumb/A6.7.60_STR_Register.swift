@@ -13,6 +13,12 @@ public struct STR_Register: Instruction {
     let n: UInt16
     let m: UInt16
 
+    public init(t: UInt16, n: UInt16, m: UInt16) {
+        self.t = t
+        self.n = n
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         var low: UInt16 = Self.sig[0]
         set3(&low, t, 0)
@@ -31,4 +37,3 @@ public struct STR_Register: Instruction {
         )
     }
 }
-

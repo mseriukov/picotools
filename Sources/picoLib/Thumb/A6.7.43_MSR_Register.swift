@@ -12,6 +12,11 @@ public struct MSR_Register: Instruction {
     let sysm: UInt16
     let n: UInt16
 
+    public init(sysm: UInt16, n: UInt16) {
+        self.sysm = sysm
+        self.n = n
+    }
+
     public func encode() -> [UInt16] {
         var high: UInt16 = Self.sig[0]
         set4(&high, n, 0)
@@ -31,4 +36,3 @@ public struct MSR_Register: Instruction {
         )
     }
 }
-

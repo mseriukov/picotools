@@ -12,6 +12,11 @@ public struct MRS: Instruction {
     let d: UInt16
     let sysm: UInt16
 
+    public init(d: UInt16, sysm: UInt16) {
+        self.d = d
+        self.sysm = sysm
+    }
+
     public func encode() -> [UInt16] {
         let high = Self.sig[0]
         var low: UInt16 = Self.sig[1]

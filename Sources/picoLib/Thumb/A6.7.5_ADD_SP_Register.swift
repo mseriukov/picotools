@@ -13,6 +13,10 @@ public struct ADD_SP_Register_T1: Instruction {
 
     let m: UInt16
 
+    public init(m: UInt16) {
+        self.m = m
+    }
+
     public func encode() -> [UInt16] {
         ADD_Register_T2(dn: m, m: 13).encode()
     }
@@ -36,6 +40,10 @@ public struct ADD_SP_Register_T2: Instruction {
     public static var msk: [UInt16] = [0b1111_1111_1000_0111]
 
     let m: UInt16
+
+    public init(m: UInt16) {
+        self.m = m
+    }
 
     public func encode() -> [UInt16] {
         ADD_Register_T2(dn: 13, m: m).encode()
