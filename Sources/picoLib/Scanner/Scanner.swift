@@ -97,7 +97,11 @@ public class Scanner {
             addToken(.comma)
 
         case ".":
-            addToken(.dot)
+            if isAlphaNumeric(peek()) {
+                addToken(try identifier())
+            } else {
+                addToken(.dot)
+            }
 
         case "-":
             addToken(.minus)
@@ -109,7 +113,11 @@ public class Scanner {
             addToken(.colon)
 
         case "#":
-            addToken(.hash)
+            if isDigit(peek()) {
+                addToken(try immediate())
+            } else {
+                addToken(.hash)
+            }
 
         case ";":
             addToken(.semicolon)
@@ -131,7 +139,7 @@ public class Scanner {
             }
 
         case "\"":
-            try string()
+            addToken(try string())
 
         case " ", "\r", "\t":
             break
@@ -141,9 +149,9 @@ public class Scanner {
 
         default:
             if isDigit(c) {
-                try number()
+                addToken(try number())
             } else if isAlpha(c) || c == "_" {
-                try identifier()
+                addToken(try identifier())
             } else {
                 throw ScannerError.unexpectedCharacter(c, line)
             }
@@ -191,7 +199,7 @@ public class Scanner {
         tokens.append(Token(kind: kind, lexeme: lexeme, line: line))
     }
 
-    private func string() throws {
+    private func string() throws -> Token.Kind {
         while peek() != "\"" && !isAtEnd() {
             if peek() == "\n" { line += 1 }
             advance()
@@ -202,22 +210,35 @@ public class Scanner {
         }
         advance()
         let string = String(source[source.index(after: start)..<source.index(before: current)])
-        addToken(.string(string))
+        return .string(string)
     }
 
-    private func number() throws {
+    private func number() throws -> Token.Kind {
         while isDigit(peek()) { advance() }
 
         let numStr = String(source[start..<current])
         guard let num = Int(numStr) else {
             throw ScannerError.invalidNumber(numStr, line)
         }
-        addToken(.number(num))
+        return .number(num)
     }
 
-    private func identifier() throws {
+    private func identifier() throws -> Token.Kind {
         while isAlphaNumeric(peek()) || peek() == "_" { advance() }
         let str = String(source[start..<current])
-        addToken( .init(str) ?? .identifier(str))
+        return .init(str) ?? .identifier(str)
+    }
+
+    private func immediate() throws -> Token.Kind {
+        while isDigit(peek()) { advance() }
+
+        let numStr = String(source[source.index(after: start)..<current])
+        guard let num = Int(numStr) else {
+            throw ScannerError.invalidNumber(numStr, line)
+        }
+        return .immediate(num)
+    }
+}
+
     }
 }
