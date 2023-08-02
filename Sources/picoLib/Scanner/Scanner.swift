@@ -240,5 +240,42 @@ public class Scanner {
     }
 }
 
+extension Token: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "L\(line) \(kind)"
+    }
+}
+
+extension Token.Kind: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch self {
+        case .leftParenthesis: return "("
+        case .rightParenthesis: return ")"
+        case .leftBrace: return "{"
+        case .rightBrace: return "}"
+        case .leftBracket: return "["
+        case .rightBracket: return "]"
+        case .comma: return ","
+        case .dot: return "."
+        case .minus: return "-"
+        case .plus: return "+"
+        case .colon: return ":"
+        case .semicolon: return ";"
+        case .hash: return "#"
+        case .star: return "*"
+        case .equal: return "="
+        case .bangEqual: return "!="
+        case .equalEqual: return "=="
+        case .less: return "<"
+        case .lessEqual: return "<="
+        case .greater: return ">"
+        case .greaterEqual: return ">="
+        case .slash: return "/"
+        case .eof: return "EOF"
+        case let .string(val): return "STR(\(val))"
+        case let .identifier(val): return "IDENT(\(val))"
+        case let .number(val): return "NUM(\(val))"
+        case let .immediate(val): return "IMM(\(val))"
+        }
     }
 }
