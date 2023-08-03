@@ -26,6 +26,7 @@ public struct Token {
         case eof
         case string(String)
         case identifier(String)
+        case directive(String)
         case number(Int)
         case immediate(Int)
 
@@ -98,7 +99,7 @@ public class Scanner {
 
         case ".":
             if isAlphaNumeric(peek()) {
-                addToken(try identifier())
+                addToken(try directive())
             } else {
                 addToken(.dot)
             }
@@ -229,6 +230,14 @@ public class Scanner {
         return .init(str) ?? .identifier(str)
     }
 
+    private func directive() throws -> Token.Kind {
+        let ident = try identifier()
+        if case let .identifier(val) = ident, val.prefix(1) == "." {
+            return .directive(String(val.dropFirst()))
+        }
+        return ident
+    }
+
     private func immediate() throws -> Token.Kind {
         while isDigit(peek()) { advance() }
 
@@ -274,6 +283,7 @@ extension Token.Kind: CustomDebugStringConvertible {
         case .eof: return "EOF"
         case let .string(val): return "STR(\(val))"
         case let .identifier(val): return "IDENT(\(val))"
+        case let .directive(val): return "DIR(\(val))"
         case let .number(val): return "NUM(\(val))"
         case let .immediate(val): return "IMM(\(val))"
         }
