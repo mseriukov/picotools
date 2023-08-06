@@ -1,5 +1,96 @@
 
 public struct Token {
+    public enum Register: String {
+        case r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, sp, lr, pc
+
+        var number: UInt16 {
+            switch self {
+            case .r0: return 0
+            case .r1: return 1
+            case .r2: return 2
+            case .r3: return 3
+            case .r4: return 4
+            case .r5: return 5
+            case .r6: return 6
+            case .r7: return 7
+            case .r8: return 8
+            case .r9: return 9
+            case .r10: return 10
+            case .r11: return 11
+            case .r12: return 12
+            case .r13, .sp: return 13
+            case .r14, .lr: return 14
+            case .r15, .pc: return 15
+            }
+        }
+    }
+
+    public enum Opcode: String {
+        case ADCS
+        case ADD
+        case ADDS
+        case ANDS
+        case ASRS
+        case ADR
+        case B // TODO: conditions
+        case BICS
+        case BKPT
+        case BL
+        case BLX
+        case BX
+        case CMN
+        case CMP
+        case CPY
+        case DMB
+        case DSB
+        case EORS
+        case ISB
+        case LDM
+        case LDR
+        case LDRB
+        case LDRH
+        case LDRSB
+        case LDRSH
+        case LSLS
+        case LSRS
+        case MOVS
+        case MOV
+        case MRS
+        case MSR
+        case MULS
+        case MVNS
+        case NEG
+        case RSBS
+        case ORRS
+        case POP
+        case PUSH
+        case REV
+        case REV16
+        case REVSH
+        case RORS
+        case SBCS
+        case STM
+        case STMIA
+        case STMEA
+        case STR
+        case STRB
+        case STRH
+        case SUBS
+        case SUB
+        case SVC
+        case SXTB
+        case SXTH
+        case TST
+        case UDF
+        case UXTB
+        case UXTH
+        case SEV
+        case NOP
+        case WFE
+        case WFI
+        case YIELD
+    }
+
     public enum Kind {
         case leftParenthesis
         case rightParenthesis
@@ -13,24 +104,77 @@ public struct Token {
         case plus
         case colon
         case semicolon
+        case exclamationMark
         case hash
         case star
         case equal
-        case bangEqual
-        case equalEqual
-        case less
-        case lessEqual
-        case greater
-        case greaterEqual
         case slash
+        case newline
         case eof
         case string(String)
+        case comment(String)
         case identifier(String)
-        case directive(String)
         case number(Int)
-        case immediate(Int)
+        case opcode(Opcode)
+        case register(Register)
+
+        var isString: Bool {
+            if case .string = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var isComment: Bool {
+            if case .comment = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var isIdentifier: Bool {
+            if case .identifier = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var isNumber: Bool {
+            if case .number = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var isOpcode: Bool {
+            if case .opcode = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        var isRegister: Bool {
+            if case .register = self  {
+                return true
+            } else {
+                return false
+            }
+        }
 
         init?(_ string: String) {
+            if let opcode = Opcode(rawValue: string) {
+                self = .opcode(opcode)
+                return
+            }
+            if let register = Register(rawValue: string) {
+                self = .register(register)
+                return
+            }
             guard let kind = Self.keywordMap[string] else { return nil }
             self = kind
         }
@@ -98,11 +242,7 @@ public class Scanner {
             addToken(.comma)
 
         case ".":
-            if isAlphaNumeric(peek()) {
-                addToken(try directive())
-            } else {
-                addToken(.dot)
-            }
+            addToken(.dot)
 
         case "-":
             addToken(.minus)
@@ -114,30 +254,22 @@ public class Scanner {
             addToken(.colon)
 
         case "#":
-            if isDigit(peek()) {
-                addToken(try immediate())
-            } else {
-                addToken(.hash)
-            }
+            addToken(.hash)
 
         case ";":
-            addToken(.semicolon)
+            addToken(try comment())
 
         case "*":
             addToken(.star)
 
         case "!":
-            addToken(match("=") ? .bangEqual : .equal)
+            addToken(.exclamationMark)
 
         case "=":
-            addToken(match("=") ? .equalEqual : .equal)
+            addToken(.equal)
 
         case "/":
-            if match("/") {
-                while peek() != "\n" && !isAtEnd() { advance() }
-            } else {
-                addToken(.slash)
-            }
+            addToken(.slash)
 
         case "\"":
             addToken(try string())
@@ -147,11 +279,12 @@ public class Scanner {
 
         case "\n":
             line += 1
+            addToken(.newline)
 
         default:
             if isDigit(c) {
                 addToken(try number())
-            } else if isAlpha(c) || c == "_" {
+            } else if isAlpha(c) {
                 addToken(try identifier())
             } else {
                 throw ScannerError.unexpectedCharacter(c, line)
@@ -214,6 +347,12 @@ public class Scanner {
         return .string(string)
     }
 
+    private func comment() throws -> Token.Kind {
+        while peek() != "\n" && !isAtEnd() { advance() }
+        let comment = String(source[start..<current])
+        return .comment(comment)
+    }
+
     private func number() throws -> Token.Kind {
         while isDigit(peek()) { advance() }
 
@@ -225,27 +364,9 @@ public class Scanner {
     }
 
     private func identifier() throws -> Token.Kind {
-        while isAlphaNumeric(peek()) || peek() == "_" { advance() }
+        while isAlphaNumeric(peek()) { advance() }
         let str = String(source[start..<current])
         return .init(str) ?? .identifier(str)
-    }
-
-    private func directive() throws -> Token.Kind {
-        let ident = try identifier()
-        if case let .identifier(val) = ident, val.prefix(1) == "." {
-            return .directive(String(val.dropFirst()))
-        }
-        return ident
-    }
-
-    private func immediate() throws -> Token.Kind {
-        while isDigit(peek()) { advance() }
-
-        let numStr = String(source[source.index(after: start)..<current])
-        guard let num = Int(numStr) else {
-            throw ScannerError.invalidNumber(numStr, line)
-        }
-        return .immediate(num)
     }
 }
 
@@ -273,19 +394,21 @@ extension Token.Kind: CustomDebugStringConvertible {
         case .hash: return "#"
         case .star: return "*"
         case .equal: return "="
-        case .bangEqual: return "!="
-        case .equalEqual: return "=="
-        case .less: return "<"
-        case .lessEqual: return "<="
-        case .greater: return ">"
-        case .greaterEqual: return ">="
+        case .exclamationMark: return "!"
         case .slash: return "/"
         case .eof: return "EOF"
         case let .string(val): return "STR(\(val))"
         case let .identifier(val): return "IDENT(\(val))"
-        case let .directive(val): return "DIR(\(val))"
         case let .number(val): return "NUM(\(val))"
-        case let .immediate(val): return "IMM(\(val))"
+        case .newline: return "NEWLINE"
+        case let .opcode(val): return "OPCODE(\(val))"
+        case let .register(val): return "REG(\(val))"
+        case let .comment(val): return "COMMENT(\(val))"
         }
     }
+}
+
+
+extension Token.Kind: Equatable {
+    
 }

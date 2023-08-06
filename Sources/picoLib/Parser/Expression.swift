@@ -9,7 +9,6 @@ protocol ExpressionVisitor {
     func visitNumberLiteral(_ expr: NumberLiteral) -> R
 }
 
-
 protocol Expression {
     func accept<R, V>(visitor: V) -> R where V: ExpressionVisitor, V.R == R
 }
