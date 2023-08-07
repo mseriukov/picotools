@@ -59,7 +59,7 @@ public struct CMP_Register_T2: Instruction {
     }
 
     public func encode() -> [UInt16] {
-        guard n >= 8 || m >= 8 else { fatalError("<Rn> and <Rm> should be not both from r0-r7 for CMP T1 encoding.") }
+        guard n >= 8 || m >= 8 else { fatalError("<Rn> and <Rm> should be not both from r0-r7 for CMP T2 encoding.") }
         var low: UInt16 = Self.sig[0]
         set2reg4(&low, r1: m, r2: n)
         return [low]

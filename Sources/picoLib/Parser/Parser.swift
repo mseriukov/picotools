@@ -8,18 +8,8 @@
  register: r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8 | r9 | r10 | r11 | r12 | r13 | r14 | r15 | sp | lr | pc
  registerList: '{' register (',' register)? '}'
 
- instruction:
-    ADCS (register ',')? register ',' register |
-    ADDS (register ',')? register ',' immediate
     ...
  Instruction list:
- ADCS {<Rd>,} <Rn>, <Rm>
- ADDS {<Rd>,} <Rn>, #<const>
- ADD {<Rd>,} SP, #<const>
- ADD <Rd>, PC, #<const>
- CMP <Rn>, #<const>
- ADD{S} {<Rd>,} <Rn>, <Rm>
- ADD {<Rd>,} SP, <Rm>
  ADR <Rd>, <label>
  ANDS {<Rd>,} <Rn>, <Rm>
  ASRS <Rd>, <Rm>, #<imm5>
@@ -101,11 +91,6 @@
  UXTB <Rd>, <Rm>
  UXTH <Rd>, <Rm>
  SEV
- NOP
- WFE
- WFI
- YIELD
-
 */
 
 
@@ -199,18 +184,52 @@ extension Parser {
 
     private func instruction(opcode: Token.Opcode) throws -> any Instruction {
         switch opcode {
-        case .ADD:
-            return try addInstruction()
-        case .YIELD:
-            return YIELD()
-        default:
-            return NOP()
+        case .ADCS: return try adcsInstruction()
+        case .ADD: return try addInstruction()
+        case .CMP: return try cmpInstruction()
+        case .NOP: return NOP()
+        case .SEV: return SEV()
+        case .WFE: return WFE()
+        case .WFI: return WFI()
+        case .YIELD: return YIELD()
+        default: return NOP() // FIXME: throw error when all instructions are here.
         }
+    }
+
+    private func cmpInstruction() throws -> any Instruction {
+        // CMP <Rn>, #<const>
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0]
+        else { throw ParserError.unexpectedError }
+
+        if case let .register(r2) = arguments[1] {
+            // TODO: Verify necessary conditions.
+            if r1 < 8 && r2 < 8 {
+                return CMP_Register_T1(n: r1, m: r2)
+            }
+            return CMP_Register_T2(n: r1, m: r2)
+
+        } else if case let .immediate(imm) = arguments[1] {
+            return CMP_Immediate(n: r1, imm8: imm)
+        } else {
+            throw ParserError.unexpectedError
+        }
+    }
+
+    private func adcsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return ADC_Register(dn: r1, m: r2) // ADCS <Rn>, <Rm>
     }
 
     private func addInstruction() throws -> any Instruction {
         let arguments = try argumentList()
-
         switch arguments.count {
         case 2:
             guard

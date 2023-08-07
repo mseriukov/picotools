@@ -3,10 +3,16 @@ import picoLib
 
 let source = """
 main:
-    YIELD               ;This is a comment
+    YIELD               ; This is a comment
     ADD r0, r0
     ADD r0, sp, #40     ; asdf
-
+    ADCS r7, r12        ;
+    NOP
+    NOP
+    WFE
+    CMP r2, r3
+    CMP r7, r12
+    CMP r5, #42
 """
 
 let scanner = Scanner(source: source)
