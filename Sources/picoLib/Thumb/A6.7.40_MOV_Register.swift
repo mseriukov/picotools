@@ -34,6 +34,12 @@ public struct MOV_Register_T1: Instruction {
     }
 }
 
+extension MOV_Register_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MOV r\(d), r\(m)"
+    }
+}
+
 // Encoding T2
 // MOVS <Rd>,<Rm>
 // All versions of the Thumb instruction set.
@@ -65,5 +71,11 @@ public struct MOV_Register_T2: Instruction {
             d: get3(low, 0),
             m: get3(low, 3)
         )
+    }
+}
+
+extension MOV_Register_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MOVS r\(d), r\(m)"
     }
 }

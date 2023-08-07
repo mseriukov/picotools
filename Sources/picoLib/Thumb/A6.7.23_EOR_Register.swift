@@ -33,3 +33,9 @@ public struct EOR_Register: Instruction {
         )
     }
 }
+
+extension EOR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "EORS r\(dn), r\(m)"
+    }
+}

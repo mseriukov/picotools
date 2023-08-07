@@ -20,3 +20,9 @@ public struct YIELD: Instruction {
         return Self()
     }
 }
+
+extension YIELD: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "YIELD"
+    }
+}

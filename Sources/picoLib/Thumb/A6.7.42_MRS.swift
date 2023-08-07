@@ -34,3 +34,9 @@ public struct MRS: Instruction {
         )
     }
 }
+
+extension MRS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MRS r\(d), sysm(\(sysm))"
+    }
+}

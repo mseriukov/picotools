@@ -33,3 +33,9 @@ public struct UXTB: Instruction {
         )
     }
 }
+
+extension UXTB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "UXTB r\(d), r\(m)"
+    }
+}

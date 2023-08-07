@@ -33,3 +33,9 @@ public struct MVN_Register: Instruction {
         )
     }
 }
+
+extension MVN_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MVNS r\(d), r\(m)"
+    }
+}

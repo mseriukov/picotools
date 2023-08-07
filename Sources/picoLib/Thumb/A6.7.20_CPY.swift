@@ -28,6 +28,12 @@ public struct CPY_T1: Instruction {
     }
 }
 
+extension CPY_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CPY r\(d), r\(m)"
+    }
+}
+
 public struct CPY_T2: Instruction {
     public static var sig: [UInt16] = [0b0000_0000_0000_0000] // 0x0000
     public static var msk: [UInt16] = [0b1111_1111_1100_0000]
@@ -51,5 +57,11 @@ public struct CPY_T2: Instruction {
             d: inst.d,
             m: inst.m
         )
+    }
+}
+
+extension CPY_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CPY r\(d), r\(m)"
     }
 }

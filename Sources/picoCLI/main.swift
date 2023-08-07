@@ -22,7 +22,8 @@ let scanner = Scanner(source: source)
 do {
     let parser = Parser(tokens: try scanner.scanTokens())
     let statements = try parser.parse()
-    print(statements)
+
+    statements.forEach { print($0) }
 } catch {
     print(error)
 }

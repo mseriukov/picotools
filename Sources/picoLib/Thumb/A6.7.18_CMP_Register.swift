@@ -35,6 +35,12 @@ public struct CMP_Register_T1: Instruction {
     }
 }
 
+extension CMP_Register_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CMP r\(n), r\(m)"
+    }
+}
+
 // Encoding T2
 // CMP <Rn>,<Rm>        <Rn> and <Rm> not both from R0-R7
 // All versions of the Thumb instruction set.
@@ -67,5 +73,11 @@ public struct CMP_Register_T2: Instruction {
             n: split.r2,
             m: split.r1
         )
+    }
+}
+
+extension CMP_Register_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CMP r\(n), r\(m)"
     }
 }

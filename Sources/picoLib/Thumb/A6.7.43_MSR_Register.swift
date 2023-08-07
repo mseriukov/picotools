@@ -36,3 +36,9 @@ public struct MSR_Register: Instruction {
         )
     }
 }
+
+extension MSR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MSR sysm(sysm), r\(n)"
+    }
+}

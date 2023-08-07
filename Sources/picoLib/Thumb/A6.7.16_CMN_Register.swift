@@ -33,3 +33,9 @@ public struct CMN_Register: Instruction {
         )
     }
 }
+
+extension CMN_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CMN r\(n), r\(m)"
+    }
+}

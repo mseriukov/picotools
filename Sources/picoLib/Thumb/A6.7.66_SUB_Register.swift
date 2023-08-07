@@ -37,3 +37,9 @@ public struct SUB_Register: Instruction {
         )
     }
 }
+
+extension SUB_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SUBS r\(d), r\(n), r\(m)"
+    }
+}

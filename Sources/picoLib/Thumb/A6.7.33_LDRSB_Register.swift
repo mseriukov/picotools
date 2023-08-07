@@ -37,3 +37,9 @@ public struct LDRSB_Register: Instruction {
         )
     }
 }
+
+extension LDRSB_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDRSB r\(t), [r\(n), r\(m)]"
+    }
+}

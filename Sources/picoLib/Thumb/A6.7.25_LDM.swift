@@ -34,3 +34,11 @@ public struct LDM: Instruction {
         )
     }
 }
+
+extension LDM: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        // TODO: Pretty print register list.
+        // TODO: Add ! logic.
+        "LDM \(n), \(registerList)"
+    }
+}

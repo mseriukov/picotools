@@ -33,3 +33,9 @@ public struct BIC_Register: Instruction {
         )
     }
 }
+
+extension BIC_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "BICS r\(dn), r\(m)"
+    }
+}

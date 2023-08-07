@@ -33,3 +33,9 @@ public struct AND_Register: Instruction {
         )
     }
 }
+
+extension AND_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ANDS r\(dn), r\(m)"
+    }
+}

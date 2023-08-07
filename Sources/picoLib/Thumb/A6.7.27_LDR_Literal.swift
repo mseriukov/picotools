@@ -35,3 +35,9 @@ public struct LDR_Literal: Instruction {
         )
     }
 }
+
+extension LDR_Literal: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDR r\(t), offset(\(offset)"
+    }
+}

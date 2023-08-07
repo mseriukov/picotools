@@ -20,3 +20,9 @@ public struct NOP: Instruction {
         return Self()
     }
 }
+
+extension NOP: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "NOP"
+    }
+}

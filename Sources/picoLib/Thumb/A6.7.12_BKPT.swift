@@ -29,3 +29,9 @@ public struct BKPT: Instruction {
         )
     }
 }
+
+extension BKPT: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "BKPT #\(imm8)"
+    }
+}

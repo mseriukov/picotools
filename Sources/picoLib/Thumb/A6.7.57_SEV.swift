@@ -20,3 +20,9 @@ public struct SEV: Instruction {
         return Self()
     }
 }
+
+extension SEV: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SEV"
+    }
+}

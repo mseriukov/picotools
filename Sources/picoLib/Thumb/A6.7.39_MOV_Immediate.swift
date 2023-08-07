@@ -33,3 +33,9 @@ public struct MOV_Immediate: Instruction {
         )
     }
 }
+
+extension MOV_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MOVS r\(d), #\(imm8)"
+    }
+}

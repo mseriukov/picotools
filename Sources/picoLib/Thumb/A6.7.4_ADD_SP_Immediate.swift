@@ -37,6 +37,12 @@ public struct ADD_SP_Immediate_T1: Instruction {
     }
 }
 
+extension ADD_SP_Immediate_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADD r\(d), SP, #\(imm8)"
+    }
+}
+
 // Encoding T2
 // ADD SP,SP,#<imm7>
 // All versions of the Thumb instruction set.
@@ -67,5 +73,11 @@ public struct ADD_SP_Immediate_T2: Instruction {
         return Self(
             imm7: get7(low, 0) * 4
         )
+    }
+}
+
+extension ADD_SP_Immediate_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADD SP, SP, #\(imm7)"
     }
 }

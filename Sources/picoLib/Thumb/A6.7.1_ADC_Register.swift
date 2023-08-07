@@ -33,3 +33,9 @@ public struct ADC_Register: Instruction {
         )
     }
 }
+
+extension ADC_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADCS r\(dn), r\(m)"
+    }
+}

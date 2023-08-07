@@ -39,3 +39,9 @@ public struct LDRH_Immediate: Instruction {
         )
     }
 }
+
+extension LDRH_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDRH r\(t), [r\(n), #\(imm5)]"
+    }
+}

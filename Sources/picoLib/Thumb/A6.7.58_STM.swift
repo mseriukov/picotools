@@ -33,3 +33,10 @@ public struct STM: Instruction {
         )
     }
 }
+
+extension STM: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        // TODO: Pretty print register list.
+        "STM r\(n)!, \(registerList)"
+    }
+}

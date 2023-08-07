@@ -33,3 +33,9 @@ public struct SBC_Register: Instruction {
         )
     }
 }
+
+extension SBC_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "RORS r\(dn), r\(m)"
+    }
+}

@@ -33,3 +33,9 @@ public struct SXTB: Instruction {
         )
     }
 }
+
+extension SXTB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SXTB r\(d), r\(m)"
+    }
+}

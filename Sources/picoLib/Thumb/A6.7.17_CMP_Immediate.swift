@@ -33,3 +33,9 @@ public struct CMP_Immediate: Instruction {
         )
     }
 }
+
+extension CMP_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CMP r\(n), #\(imm8)"
+    }
+}

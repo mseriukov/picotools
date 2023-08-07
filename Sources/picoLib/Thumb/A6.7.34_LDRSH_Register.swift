@@ -37,3 +37,9 @@ public struct LDRSH_Register: Instruction {
         )
     }
 }
+
+extension LDRSH_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDRSH r\(t), [r\(n), r\(m)]"
+    }
+}

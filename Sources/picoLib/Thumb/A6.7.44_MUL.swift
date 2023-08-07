@@ -33,3 +33,9 @@ public struct MUL: Instruction {
         )
     }
 }
+
+extension MUL: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "MULS r\(dm), r\(n), r\(dm)"
+    }
+}

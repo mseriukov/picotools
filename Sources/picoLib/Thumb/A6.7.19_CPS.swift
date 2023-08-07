@@ -30,3 +30,9 @@ public struct CPS: Instruction {
         )
     }
 }
+
+extension CPS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "CPS \(ie)"
+    }
+}

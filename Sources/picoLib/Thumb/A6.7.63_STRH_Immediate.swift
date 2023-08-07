@@ -39,3 +39,9 @@ public struct STRH_Immediate: Instruction {
         )
     }
 }
+
+extension STRH_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "STRH r\(t), [r\(n), #\(imm5)]"
+    }
+}

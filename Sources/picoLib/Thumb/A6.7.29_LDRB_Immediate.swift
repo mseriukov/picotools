@@ -37,3 +37,9 @@ public struct LDRB_Immediate: Instruction {
         )
     }
 }
+
+extension LDRB_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDRB r\(t), [r\(n), #\(imm5)]"
+    }
+}

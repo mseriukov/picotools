@@ -30,6 +30,12 @@ public struct ADD_SP_Register_T1: Instruction {
     }
 }
 
+extension ADD_SP_Register_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADD r\(m), SP, r\(m)"
+    }
+}
+
 // Encoding T2
 // ADD SP,<Rm>
 // All versions of the Thumb instruction set.
@@ -55,5 +61,11 @@ public struct ADD_SP_Register_T2: Instruction {
         return Self(
             m: inst.m
         )
+    }
+}
+
+extension ADD_SP_Register_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADD SP, r\(m)"
     }
 }

@@ -37,3 +37,9 @@ public struct STR_Register: Instruction {
         )
     }
 }
+
+extension STR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "STR r\(t), [r\(n), r\(m)]"
+    }
+}

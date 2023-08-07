@@ -33,3 +33,9 @@ public struct LSL_Register: Instruction {
         )
     }
 }
+
+extension LSL_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LSLS r\(dn), r\(m)"
+    }
+}

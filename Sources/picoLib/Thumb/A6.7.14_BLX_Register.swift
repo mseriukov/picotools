@@ -29,3 +29,9 @@ public struct BLX: Instruction {
         )
     }
 }
+
+extension BLX: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "BLX r\(m)"
+    }
+}

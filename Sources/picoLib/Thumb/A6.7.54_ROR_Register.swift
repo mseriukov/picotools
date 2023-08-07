@@ -33,3 +33,9 @@ public struct ROR_Register: Instruction {
         )
     }
 }
+
+extension ROR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "RORS r\(dn), r\(m)"
+    }
+}

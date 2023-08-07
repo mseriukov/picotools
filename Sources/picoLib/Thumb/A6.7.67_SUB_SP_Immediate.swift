@@ -31,3 +31,9 @@ public struct SUB_SP_Immediate: Instruction {
         )
     }
 }
+
+extension SUB_SP_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SUB SP ,SP, #\(imm7)"
+    }
+}

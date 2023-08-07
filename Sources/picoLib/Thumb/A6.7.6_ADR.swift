@@ -33,3 +33,9 @@ public struct ADR: Instruction {
         )
     }
 }
+
+extension ADR: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ADR r\(d), #\(imm8)"
+    }
+}

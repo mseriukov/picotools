@@ -33,3 +33,9 @@ public struct SXTH: Instruction {
         )
     }
 }
+
+extension SXTH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SXTH r\(d), r\(m)"
+    }
+}

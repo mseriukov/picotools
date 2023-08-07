@@ -33,3 +33,9 @@ public struct REV: Instruction {
         )
     }
 }
+
+extension REV: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "REV r\(d), r\(m)"
+    }
+}

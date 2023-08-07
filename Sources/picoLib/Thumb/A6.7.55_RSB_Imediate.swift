@@ -33,3 +33,9 @@ public struct RSB_Immediate: Instruction {
         )
     }
 }
+
+extension RSB_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "RSBS r\(d), r\(n), #0"
+    }
+}

@@ -33,3 +33,9 @@ public struct REVSH: Instruction {
         )
     }
 }
+
+extension REVSH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "REVSH r\(d), r\(m)"
+    }
+}

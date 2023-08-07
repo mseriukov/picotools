@@ -33,11 +33,11 @@ extension InstructionStatement: CustomDebugStringConvertible {
     public var debugDescription: String {
         var result = ""
         result += instruction.encode().map { String(format: "%04X", $0) }.joined()
-        result += "\t"
         if let label {
-            result += "\(label): "
+            result += " \(label): "
         }
-        result += "\(instruction)"
+        result = result.byAddingRightPadding(15)
+        result += "\(instruction)".byAddingRightPadding(40)
         if let comment {
             result += " \(comment)"
         }

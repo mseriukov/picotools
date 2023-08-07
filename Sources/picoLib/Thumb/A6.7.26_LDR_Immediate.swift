@@ -40,6 +40,12 @@ public struct LDR_Immediate_T1: Instruction {
     }
 }
 
+extension LDR_Immediate_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDR r\(t), [r\(n), #\(imm5)]"
+    }
+}
+
 // Encoding T2
 // LDR <Rt>,[SP{,#<imm8>}]
 // All versions of the Thumb instruction set.
@@ -73,5 +79,11 @@ struct LDR_Immediate_T2: Instruction {
             t: get3(low, 8),
             imm8: get8(low, 0) << 2
         )
+    }
+}
+
+extension LDR_Immediate_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LDR r\(t), [SP, #\(imm8)]"
     }
 }

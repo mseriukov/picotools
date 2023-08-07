@@ -30,6 +30,12 @@ public struct UDF_T1: Instruction {
     }
 }
 
+extension UDF_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "UDF #\(imm8)"
+    }
+}
+
 // Encoding T2
 // UDF.W #<imm16>
 // ARMv6-M, ARMv7-M
@@ -66,5 +72,11 @@ public struct UDF_T2: Instruction {
         return Self(
             imm16: imm16
         )
+    }
+}
+
+extension UDF_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "UDF #\(imm16)"
     }
 }

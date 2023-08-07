@@ -20,3 +20,9 @@ public struct WFI: Instruction {
         return Self()
     }
 }
+
+extension WFI: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "WFI"
+    }
+}

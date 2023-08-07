@@ -37,3 +37,9 @@ public struct ASR_Immediate: Instruction {
         )
     }
 }
+
+extension ASR_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ASRS r\(d), r\(m), #\(imm5)"
+    }
+}

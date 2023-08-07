@@ -29,3 +29,9 @@ public struct SVC: Instruction {
         )
     }
 }
+
+extension SVC: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SVC #\(imm8)"
+    }
+}

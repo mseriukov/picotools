@@ -86,3 +86,9 @@ public struct BL: Instruction {
         )
     }
 }
+
+extension BL: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "BL offset(\(offset)"
+    }
+}

@@ -35,6 +35,12 @@ public struct B_T1: Instruction {
     }
 }
 
+extension B_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "B cond\(cond), #\(imm8)"
+    }
+}
+
 // Encoding T2
 // B<c> <label>
 // All versions of the Thumb instruction set.
@@ -62,5 +68,11 @@ public struct B_T2: Instruction {
         return Self(
             imm11: Int16(bitPattern: signExtend11(get11(low, 0)))
         )
+    }
+}
+
+extension B_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "B #\(imm11)"
     }
 }

@@ -31,3 +31,9 @@ public struct DMB: Instruction {
         )
     }
 }
+
+extension DMB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "DMB #\(option)"
+    }
+}

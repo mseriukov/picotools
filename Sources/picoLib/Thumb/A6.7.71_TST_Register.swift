@@ -33,3 +33,9 @@ public struct TST_Register: Instruction {
         )
     }
 }
+
+extension TST_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "TST r\(n), r\(m)"
+    }
+}

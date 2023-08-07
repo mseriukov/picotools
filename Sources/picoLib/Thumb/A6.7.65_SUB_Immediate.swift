@@ -38,6 +38,12 @@ public struct SUB_Immediate_T1: Instruction {
     }
 }
 
+extension SUB_Immediate_T1: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SUBS r\(d), r\(n), #\(imm3)"
+    }
+}
+
 // Encoding T2
 // SUBS <Rdn>,#<imm8>
 // All versions of the Thumb instruction set.
@@ -69,5 +75,11 @@ struct SUB_Immediate_T2: Instruction {
             dn: get3(low, 8),
             imm8: get8(low, 0)
         )
+    }
+}
+
+extension SUB_Immediate_T2: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "SUBS r\(dn), #\(imm8)"
     }
 }

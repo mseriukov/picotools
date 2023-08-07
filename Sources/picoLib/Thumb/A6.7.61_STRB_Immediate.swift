@@ -37,3 +37,9 @@ public struct STRB_Immediate: Instruction {
         )
     }
 }
+
+extension STRB_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "STRB r\(t), [r\(n), #\(imm5)]"
+    }
+}

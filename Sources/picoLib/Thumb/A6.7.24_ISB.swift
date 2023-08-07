@@ -31,3 +31,9 @@ public struct ISB: Instruction {
         )
     }
 }
+
+extension ISB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ISB #\(option)"
+    }
+}

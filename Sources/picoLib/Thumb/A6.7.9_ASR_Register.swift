@@ -33,3 +33,9 @@ public struct ASR_Register: Instruction {
         )
     }
 }
+
+extension ASR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ASRS r\(dn), r\(m)"
+    }
+}

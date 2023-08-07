@@ -37,3 +37,9 @@ public struct LSR_Immediate: Instruction {
         )
     }
 }
+
+extension LSR_Immediate: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "LSRS r\(d), r\(m), #\(imm5)"
+    }
+}

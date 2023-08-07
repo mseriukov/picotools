@@ -34,3 +34,9 @@ public struct ORR_Register: Instruction {
         )
     }
 }
+
+extension ORR_Register: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "ORRS r\(dn), r\(m)"
+    }
+}

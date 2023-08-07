@@ -33,3 +33,10 @@ public struct POP: Instruction {
         )
     }
 }
+
+extension POP: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        // TODO: Pretty print register list.
+        "POP \(registerList) p \(p)"
+    }
+}

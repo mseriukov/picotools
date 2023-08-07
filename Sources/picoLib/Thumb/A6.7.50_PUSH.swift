@@ -33,3 +33,10 @@ public struct PUSH: Instruction {
         )
     }
 }
+
+extension PUSH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        // TODO: Pretty print register list.
+        "PUSH \(registerList) m \(m)"
+    }
+}

@@ -7,7 +7,7 @@ public protocol InstructionDecodable {
     static func decode(_ data: [UInt16]) -> Instruction
 }
 
-public protocol Instruction: InstructionEncodable, InstructionDecodable {
+public protocol Instruction: InstructionEncodable, InstructionDecodable, CustomDebugStringConvertible {
     static var sig: [UInt16] { get }
     static var msk: [UInt16] { get }
 }
