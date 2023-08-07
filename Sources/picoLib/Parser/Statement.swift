@@ -32,12 +32,12 @@ public class InstructionStatement: Statement {
 extension InstructionStatement: CustomDebugStringConvertible {
     public var debugDescription: String {
         var result = ""
-        result += instruction.encode().map { String(format: "%04X", $0) }.joined()
         if let label {
-            result += " \(label): "
+            result += "\(label):\n"
         }
-        result = result.byAddingRightPadding(15)
-        result += "\(instruction)".byAddingRightPadding(40)
+        result += String(repeating: " ", count: 4)
+        result += instruction.encode().map { String(format: "%04X", $0) }.joined().byAddingRightPadding(10)
+        result += "\(instruction)".byAddingRightPadding(20)
         if let comment {
             result += " \(comment)"
         }

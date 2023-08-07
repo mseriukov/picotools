@@ -2,7 +2,7 @@
 /*
  program: statement* EOF
  statement: instruction
- instruction: label? instruction? comment? NEWLINE?
+ instruction: label? NEWLINE? instruction? comment? NEWLINE?
  label: identifier ':'
  immediate: '#' number
  register: r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8 | r9 | r10 | r11 | r12 | r13 | r14 | r15 | sp | lr | pc
@@ -179,8 +179,10 @@ extension Parser {
         if peek().kind.isIdentifier {
             label = advance().kind.stringValue!
             try consume({ $0 == .colon }, "Colon expected")
-        }
 
+            if peek().kind == .newline { advance() }
+        }
+        
         let token = try consume({ $0.isOpcode }, "Opcode expected")
         let opcode = token.kind.opcodeValue!
         let instruction = try instruction(opcode: opcode)
