@@ -171,7 +171,6 @@ extension Parser {
         return statements
     }
 
-
     private func statement() throws -> Statement {
         try instruction()
     }
@@ -180,45 +179,21 @@ extension Parser {
         var label: String?
         if peek().kind.isIdentifier {
             let token = try consume({ $0.isIdentifier }, "Identifier expected.")
+            label = token.kind.stringValue!
             try consume({ $0 == .colon }, "Colon expected")
-
-            if case let .identifier(val) = token.kind {
-                label = val
-            } else {
-                throw ParserError.unexpectedError
-            }
-        }
-        let opcode: Token.Opcode
-        if peek().kind.isOpcode {
-            let token = try consume({ $0.isOpcode }, "Opcode expected")
-            if case let .opcode(val) = token.kind {
-                opcode = val
-            } else {
-                throw ParserError.unexpectedError
-            }
-        } else {
-            throw ParserError.unexpectedError
         }
 
+        let token = try consume({ $0.isOpcode }, "Opcode expected")
+        let opcode = token.kind.opcodeValue!
         let instruction = try instruction(opcode: opcode)
 
-        let comment: String?
+        var comment: String? = nil
         if peek().kind.isComment {
             let token = try consume({ $0.isComment }, "Comment expected")
-            if case let .comment(val) = token.kind {
-                comment = val
-            } else {
-                throw ParserError.unexpectedError
-            }
-        } else {
-            comment = nil
+            comment = token.kind.stringValue
         }
 
-        return InstructionStatement(
-            label: label,
-            instruction: instruction,
-            comment: comment
-        )
+        return InstructionStatement(label: label, instruction: instruction, comment: comment)
     }
 
 
@@ -290,11 +265,7 @@ extension Parser {
 
             if peek().kind.isRegister {
                 let token = try consume({ $0.isRegister }, "Register expected")
-                if case let .register(val) = token.kind {
-                    list.append(.register(val.number))
-                } else {
-                    throw ParserError.unexpectedError
-                }
+                list.append(.register(token.kind.registerValue!.number))
                 if peek().kind == .comma {
                     try consume({ $0 == .comma }, "comma expcted")
                 }
@@ -306,10 +277,6 @@ extension Parser {
     private func immediate() throws -> UInt16 {
         try consume({$0 == .hash}, "Immediates should start with #.")
         let token = try consume({ $0.isNumber }, "Immediates should be a number.")
-        if case let .number(val) = token.kind {
-            return UInt16(val)
-        } else {
-            throw ParserError.unexpectedError
-        }
+        return UInt16(token.kind.intValue!)
     }
 }

@@ -166,6 +166,36 @@ public struct Token {
             }
         }
 
+        var stringValue: String? {
+            switch self {
+            case let .string(val): return val
+            case let .comment(val): return val
+            case let .identifier(val): return val
+            default: return nil
+            }
+        }
+
+        var intValue: Int? {
+            switch self {
+            case let .number(val): return val
+            default: return nil
+            }
+        }
+
+        var opcodeValue: Opcode? {
+            switch self {
+            case let .opcode(val): return val
+            default: return nil
+            }
+        }
+
+        var registerValue: Register? {
+            switch self {
+            case let .register(val): return val
+            default: return nil
+            }
+        }
+
         init?(_ string: String) {
             if let opcode = Opcode(rawValue: string) {
                 self = .opcode(opcode)
