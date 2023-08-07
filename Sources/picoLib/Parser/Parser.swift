@@ -1,7 +1,8 @@
 
 /*
- program: line* EOF
- line: (label? instruction? comment? NEWLINE) *
+ program: statement* EOF
+ statement: instruction
+ instruction: label? instruction? comment? NEWLINE?
  label: identifier ':'
  immediate: '#' number
  register: r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8 | r9 | r10 | r11 | r12 | r13 | r14 | r15 | sp | lr | pc
@@ -155,18 +156,16 @@ public class Parser {
     @discardableResult
     private func consume(_ condition: (Token.Kind) -> Bool, _ message: String) throws -> Token {
         if check(condition) { return advance() }
-        throw ParserError.unexpectedError
+        throw ParserError.assertionFailure(message)
     }
 }
 
 extension Parser {
-
     public func parse() throws -> [Statement] {
         var statements: [Statement] = []
 
         while !isAtEnd() {
             statements.append(try statement())
-            try consume({$0 == .newline}, "newline expected")
         }
         return statements
     }
@@ -178,8 +177,7 @@ extension Parser {
     private func instruction() throws -> Statement {
         var label: String?
         if peek().kind.isIdentifier {
-            let token = try consume({ $0.isIdentifier }, "Identifier expected.")
-            label = token.kind.stringValue!
+            label = advance().kind.stringValue!
             try consume({ $0 == .colon }, "Colon expected")
         }
 
@@ -189,13 +187,13 @@ extension Parser {
 
         var comment: String? = nil
         if peek().kind.isComment {
-            let token = try consume({ $0.isComment }, "Comment expected")
-            comment = token.kind.stringValue
+            comment = advance().kind.stringValue
         }
+
+        if peek().kind == .newline { advance() }
 
         return InstructionStatement(label: label, instruction: instruction, comment: comment)
     }
-
 
     private func instruction(opcode: Token.Opcode) throws -> any Instruction {
         switch opcode {
@@ -207,7 +205,6 @@ extension Parser {
             return NOP()
         }
     }
-
 
     private func addInstruction() throws -> any Instruction {
         let arguments = try argumentList()
@@ -257,18 +254,12 @@ extension Parser {
         while !peek().kind.isComment && !isAtEnd() && peek().kind != .newline {
             if peek().kind == .hash {
                 list.append(.immediate(try immediate()))
-
-                if peek().kind == .comma {
-                    try consume({ $0 == .comma }, "comma expcted")
-                }
+                if peek().kind == .comma { advance() }
             }
 
             if peek().kind.isRegister {
-                let token = try consume({ $0.isRegister }, "Register expected")
-                list.append(.register(token.kind.registerValue!.number))
-                if peek().kind == .comma {
-                    try consume({ $0 == .comma }, "comma expcted")
-                }
+                list.append(.register(advance().kind.registerValue!.number))
+                if peek().kind == .comma { advance() }
             }
         }
         return list
