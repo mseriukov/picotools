@@ -11,9 +11,7 @@
     ...
  Instruction list:
  ADR <Rd>, <label>
- ANDS {<Rd>,} <Rn>, <Rm>
- ASRS <Rd>, <Rm>, #<imm5>
- ASRS <Rd>, <Rn>, <Rm>
+
  B{<c>} <label>
  BICS {<Rd>,} <Rn>, <Rm>
  BKPT {#}<imm8>
@@ -185,6 +183,8 @@ extension Parser {
     private func instruction(opcode: Token.Opcode) throws -> any Instruction {
         switch opcode {
         case .ADCS: return try adcsInstruction()
+        case .ANDS: return try andsInstruction()
+        case .ASRS: return try asrsInstruction()
         case .ADD: return try addInstruction()
         case .CMP: return try cmpInstruction()
         case .NOP: return NOP()
@@ -194,6 +194,37 @@ extension Parser {
         case .YIELD: return YIELD()
         default: return NOP() // FIXME: throw error when all instructions are here.
         }
+    }
+
+    private func asrsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+
+        if arguments.count == 3 {
+            guard
+                case let .register(r1) = arguments[0],
+                case let .register(r2) = arguments[1],
+                case let .immediate(imm) = arguments[2]
+            else { throw ParserError.unexpectedError }
+            return ASR_Immediate(d: r1, m: r2, imm5: imm) // ASRS <Rd>, <Rm>, #<imm5>
+        }
+        if arguments.count == 2 {
+            guard
+                case let .register(r1) = arguments[0],
+                case let .register(r2) = arguments[1]
+            else { throw ParserError.unexpectedError }
+            return ASR_Register(dn: r1, m: r2) // ASRS <Rd>, <Rn>, <Rm>
+        }
+        throw ParserError.unexpectedError
+    }
+
+    private func andsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return AND_Register(dn: r1, m: r2) // ANDS {<Rd>,} <Rn>, <Rm>
     }
 
     private func cmpInstruction() throws -> any Instruction {

@@ -13,6 +13,9 @@ main:
     CMP r2, r3
     CMP r7, r12
     CMP r5, #42
+    ANDS r3, r7
+    ASRS r5, r0
+    ASRS r7, r10, #40
 """
 
 let scanner = Scanner(source: source)
