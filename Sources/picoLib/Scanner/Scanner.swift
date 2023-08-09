@@ -41,6 +41,7 @@ public struct Token {
         case CMN
         case CMP
         case CPY
+        case CPYS
         case DMB
         case DSB
         case EORS

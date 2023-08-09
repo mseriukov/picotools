@@ -18,13 +18,8 @@
  BL <label>
  BLX <Rm>
  BX <Rm>
- CMN <Rn>, <Rm>
- CMP <Rn>, <Rm>
- CPY <Rd>, <Rn>
- DMB {<opt>}
- DSB {<opt>}
+
  EORS {<Rd>,} <Rn>, <Rm>
- ISB {<opt>}
  LDM <Rn>{!}, <registers>
  LDR <Rt>, [<Rn> {, #+/-<imm>}]
  LDR <Rt>, <label>
@@ -41,34 +36,34 @@
  LSRS <Rd>, <Rm>, #<imm5>
  LSRS <Rd>, <Rn>, <Rm>
  MOVS <Rd>, #<const>
- MOV{S} <Rd>, <Rm>
+
  MOVS <Rd>,<Rm>,ASR #<n>
- ASRS <Rd>,<Rm>,#<n>
  MOVS <Rd>,<Rm>,LSL #<n>
- LSLS <Rd>,<Rm>,#<n>
  MOVS <Rd>,<Rm>,LSR #<n>
- LSRS <Rd>,<Rm>,#<n>
  MOVS <Rd>,<Rm>,ASR <Rs>
- ASRS <Rd>,<Rm>,<Rs>
  MOVS <Rd>,<Rm>,LSL <Rs>
- LSLS <Rd>,<Rm>,<Rs>
  MOVS <Rd>,<Rm>,LSR <Rs>
- LSRS <Rd>,<Rm>,<Rs>
  MOVS <Rd>,<Rm>,ROR <Rs>
+
+ ASRS <Rd>,<Rm>,#<n>
+ LSLS <Rd>,<Rm>,#<n>
+ LSRS <Rd>,<Rm>,#<n>
+ ASRS <Rd>,<Rm>,<Rs>
+ LSLS <Rd>,<Rm>,<Rs>
+ LSRS <Rd>,<Rm>,<Rs>
  RORS <Rd>,<Rm>,<Rs>
+ 
  MRS <Rd>,<spec_reg>
  MSR <spec_reg>,<Rn>
  MULS {<Rd>,} <Rn>, <Rm>
- MVNS <Rd>, <Rm>
+
  NEG {<Rd>,} <Rm>
  RSBS {<Rd>,} <Rm>, #0
  ORRS {<Rd>,} <Rn>, <Rm>
  POP <registers>
  PUSH <registers>
- REV <Rd>, <Rm>
- REV16 <Rd>, <Rm>
- REVSH <Rd>, <Rm>
- RORS <Rd>, <Rn>, <Rm>
+
+
  RSBS {<Rd>,} <Rn>, #<const>
  SBCS {<Rd>,} <Rn>, <Rm>
  STM{IA|EA} <Rn>!, <registers>
@@ -81,20 +76,13 @@
  SUBS {<Rd>,} <Rn>, #<const>
  SUBS {<Rd>,} <Rn>, <Rm>
  SUB {<Rd>,} SP, #<const>
- SVC {#}<imm>
- SXTB <Rd>, <Rm>
- SXTH <Rd>, <Rm>
- TST <Rn>, <Rm>
- UDF {#}<imm>
- UXTB <Rd>, <Rm>
- UXTH <Rd>, <Rm>
- SEV
 */
 
 
 enum InstructionArgument {
     case register(UInt16)
     case immediate(UInt16)
+    case number(Int)
 }
 
 public class Parser {
@@ -187,13 +175,198 @@ extension Parser {
         case .ASRS: return try asrsInstruction()
         case .ADD: return try addInstruction()
         case .CMP: return try cmpInstruction()
+
+        case .CMN: return try cmnInstruction()
+        case .CPY: return try cpyInstruction()
+        case .CPYS: return try cpysInstruction()
+        case .MOV: return try movInstruction()
+        case .MOVS: return try movsInstruction()
+        case .UXTH: return try uxthInstruction()
+        case .UXTB: return try uxtbInstruction()
+        case .SXTH: return try sxthInstruction()
+        case .SXTB: return try sxtbInstruction()
+        case .TST: return try tstInstruction()
+        case .MVNS: return try mvnsInstruction()
+        case .REV: return try revInstruction()
+        case .REV16: return try rev16Instruction()
+        case .REVSH: return try revshInstruction()
+            
+        case .DMB: return try dmbInstruction()
+        case .DSB: return try dsbInstruction()
+        case .ISB: return try isbInstruction()
+        case .SVC: return try svcInstruction()
+        case .UDF: return try udfInstruction()
+
         case .NOP: return NOP()
         case .SEV: return SEV()
         case .WFE: return WFE()
         case .WFI: return WFI()
+        case .SEV: return SEV()
         case .YIELD: return YIELD()
         default: return NOP() // FIXME: throw error when all instructions are here.
         }
+    }
+
+    private func mvnsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return MVN_Register(d: r1, m: r2)
+    }
+
+    private func revInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return REV(d: r1, m: r2)
+    }
+
+    private func rev16Instruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return REV16(d: r1, m: r2)
+    }
+
+    private func revshInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return REVSH(d: r1, m: r2)
+    }
+
+    private func sxtbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return SXTB(d: r1, m: r2)
+    }
+
+    private func sxthInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return SXTH(d: r1, m: r2)
+    }
+
+    private func uxtbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return UXTB(d: r1, m: r2)
+    }
+
+    private func uxthInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return UXTH(d: r1, m: r2)
+    }
+
+    private func tstInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return TST_Register(n: r1, m: r2)
+    }
+
+    private func cmnInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return CMN_Register(n: r1, m: r2)
+    }
+
+    private func cpyInstruction() throws -> any Instruction {
+        return try movInstruction()
+    }
+
+    private func cpysInstruction() throws -> any Instruction {
+        return try movsInstruction()
+    }
+
+    private func movInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return MOV_Register_T1(d: r1, m: r2)
+    }
+
+    private func movsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return MOV_Register_T2(d: r1, m: r2)
+    }
+
+    private func svcInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
+        return SVC(imm8: UInt16(opt))
+    }
+
+    private func udfInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard case let .immediate(imm) = arguments[0] else { throw ParserError.unexpectedError }
+        let uimm = UInt16(imm)
+        if uimm < 256 {
+            return UDF_T1(imm8: uimm)
+        }
+        return UDF_T2(imm16: uimm)
+    }
+
+    private func dmbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
+        return DMB(option: UInt16(opt))
+    }
+
+    private func dsbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
+        return DSB(option: UInt16(opt))
+    }
+
+    private func isbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
+        return ISB(option: UInt16(opt))
     }
 
     private func asrsInstruction() throws -> any Instruction {
@@ -304,6 +477,11 @@ extension Parser {
     private func argumentList() throws -> [InstructionArgument] {
         var list: [InstructionArgument] = []
         while !peek().kind.isComment && !isAtEnd() && peek().kind != .newline {
+            if peek().kind.isNumber {
+                list.append(.number(advance().kind.intValue!))
+                if peek().kind == .comma { advance() }
+            }
+
             if peek().kind == .hash {
                 list.append(.immediate(try immediate()))
                 if peek().kind == .comma { advance() }

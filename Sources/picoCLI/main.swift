@@ -16,6 +16,21 @@ main:
     ANDS r3, r7
     ASRS r5, r0
     ASRS r7, r10, #40
+    DMB #42
+    DSB #43
+    ISB #44
+    CMN r4, r5
+    MOV r1, r2
+    MOVS r2, r3
+    CPY r1, r2
+    CPYS r2, r3
+    MVNS r2, r3
+    REV r4, r5
+    REV16 r5, r0
+    REVSH r2, r3
+    SVC #42
+    UDF #42
+    UDF #4242
 """
 
 let scanner = Scanner(source: source)
