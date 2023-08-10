@@ -11,8 +11,13 @@
     ...
  Instruction list:
  ADR <Rd>, <label>
-
  B{<c>} <label>
+
+ LDR <Rt>, [PC, #<imm>]
+ LDR <Rt>, <label>
+ LDR <Rt>, [<Rn> {, #+/-<imm>}]
+ LDR <Rt>, [<Rn>, <Rm>]
+
  BICS {<Rd>,} <Rn>, <Rm>
  BKPT {#}<imm8>
  BL <label>
@@ -21,20 +26,14 @@
 
  EORS {<Rd>,} <Rn>, <Rm>
  LDM <Rn>{!}, <registers>
- LDR <Rt>, [<Rn> {, #+/-<imm>}]
- LDR <Rt>, <label>
- LDR <Rt>, [PC, #<imm>]
- LDR <Rt>, [<Rn>, <Rm>]
+
+
  LDRB <Rt>, [<Rn> {, #+/-<imm>}]
- LDRB <Rt>, [<Rn>, <Rm>]
  LDRH <Rt>, [<Rn> {, #+/-<imm>}]
- LDRH <Rt>, [<Rn>, <Rm>]
- LDRSB <Rt>, [<Rn>, <Rm>]
- LDRSH <Rt>, [<Rn>, <Rm>]
- LSLS <Rd>, <Rm>, #<imm5>
- LSLS <Rd>, <Rn>, <Rm>
- LSRS <Rd>, <Rm>, #<imm5>
- LSRS <Rd>, <Rn>, <Rm>
+ STR <Rt>, [<Rn> {, #+/-<imm>}]
+ STRH <Rt>, [<Rn> {, #+/-<imm>}]
+ STRB <Rt>, [<Rn> {, #+/-<imm>}]
+
  MOVS <Rd>, #<const>
 
  MOVS <Rd>,<Rm>,ASR #<n>
@@ -67,12 +66,10 @@
  RSBS {<Rd>,} <Rn>, #<const>
  SBCS {<Rd>,} <Rn>, <Rm>
  STM{IA|EA} <Rn>!, <registers>
- STR <Rt>, [<Rn> {, #+/-<imm>}]
- STR <Rt>, [<Rn>, <Rm>]
- STRB <Rt>, [<Rn> {, #+/-<imm>}]
+
  STRB <Rt>, [<Rn>, <Rm> {, LSL #<shift>}]
- STRH <Rt>, [<Rn> {, #+/-<imm>}]
- STRH <Rt>, [<Rn>, <Rm>]
+
+
  SUBS {<Rd>,} <Rn>, #<const>
  SUBS {<Rd>,} <Rn>, <Rm>
  SUB {<Rd>,} SP, #<const>
@@ -197,15 +194,89 @@ extension Parser {
         case .SVC: return try svcInstruction()
         case .UDF: return try udfInstruction()
 
+        case .LDRH: return try ldrhInstruction()
+        case .LDRB: return try ldrbInstruction()
+        case .LDRSH: return try ldrshInstruction()
+        case .LDRSB: return try ldrsbInstruction()
+        case .STR: return try strInstruction()
+        case .STRH: return try strhInstruction()
+
         case .NOP: return NOP()
         case .SEV: return SEV()
         case .WFE: return WFE()
         case .WFI: return WFI()
-        case .SEV: return SEV()
         case .YIELD: return YIELD()
         default: return NOP() // FIXME: throw error when all instructions are here.
         }
     }
+
+    private func strInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return STR_Register(t: r1, n: r2, m: r3)
+    }
+
+    private func strhInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return STRH_Register(t: r1, n: r2, m: r3)
+    }
+
+    private func ldrhInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return LDRH_Register(t: r1, n: r2, m: r3)
+    }
+
+    private func ldrbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return LDRB_Register(t: r1, n: r2, m: r3)
+    }
+
+    private func ldrsbInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return LDRSB_Register(t: r1, n: r2, m: r3)
+    }
+
+    private func ldrshInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        else { throw ParserError.unexpectedError }
+        return LDRSH_Register(t: r1, n: r2, m: r3)
+    }
+
+
 
     private func mvnsInstruction() throws -> any Instruction {
         let arguments = try argumentList()
@@ -491,6 +562,7 @@ extension Parser {
                 list.append(.register(advance().kind.registerValue!.number))
                 if peek().kind == .comma { advance() }
             }
+            if peek().kind == .rightBracket || peek().kind == .leftBracket { advance() }
         }
         return list
     }

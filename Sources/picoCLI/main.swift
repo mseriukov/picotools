@@ -31,6 +31,12 @@ main:
     SVC #42
     UDF #42
     UDF #4242
+    LDRH r1, [r2, r3]
+    LDRSB r1, [r2, r3]
+    LDRSH r1, [r2, r3]
+    LDRB r1, [r2, r3]
+    STR r1, [r2, r3]
+    STRH r1, [r2, r3]
 """
 
 let scanner = Scanner(source: source)
