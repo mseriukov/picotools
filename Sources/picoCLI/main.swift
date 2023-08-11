@@ -14,8 +14,6 @@ main:
     CMP r7, r12
     CMP r5, #42
     ANDS r3, r7
-    ASRS r5, r0
-    ASRS r7, r10, #40
     DMB #42
     DSB #43
     ISB #44
@@ -37,6 +35,23 @@ main:
     LDRB r1, [r2, r3]
     STR r1, [r2, r3]
     STRH r1, [r2, r3]
+
+    ASRS r1, r2
+    ASRS r1, r2, #42
+    LSLS r1, r2
+    LSRS r1, r2, #42
+    RORS r1, r2
+    RSBS r1, r2
+    ORRS r1, r2
+
+    MULS r1, r2
+    BICS r1, r2
+    EORS r1, r2
+    SBCS r1, r2
+    SUBS r1, #42
+    SUBS r1, r2, #42
+    SUBS r1, r2, r3
+    SUB r13, r13, #40
 """
 
 let scanner = Scanner(source: source)

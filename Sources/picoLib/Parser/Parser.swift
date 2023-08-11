@@ -18,15 +18,15 @@
  LDR <Rt>, [<Rn> {, #+/-<imm>}]
  LDR <Rt>, [<Rn>, <Rm>]
 
- BICS {<Rd>,} <Rn>, <Rm>
  BKPT {#}<imm8>
  BL <label>
  BLX <Rm>
  BX <Rm>
 
- EORS {<Rd>,} <Rn>, <Rm>
  LDM <Rn>{!}, <registers>
-
+ POP <registers>
+ PUSH <registers>
+ STM{IA|EA} <Rn>!, <registers>
 
  LDRB <Rt>, [<Rn> {, #+/-<imm>}]
  LDRH <Rt>, [<Rn> {, #+/-<imm>}]
@@ -35,7 +35,6 @@
  STRB <Rt>, [<Rn> {, #+/-<imm>}]
 
  MOVS <Rd>, #<const>
-
  MOVS <Rd>,<Rm>,ASR #<n>
  MOVS <Rd>,<Rm>,LSL #<n>
  MOVS <Rd>,<Rm>,LSR #<n>
@@ -43,36 +42,11 @@
  MOVS <Rd>,<Rm>,LSL <Rs>
  MOVS <Rd>,<Rm>,LSR <Rs>
  MOVS <Rd>,<Rm>,ROR <Rs>
-
- ASRS <Rd>,<Rm>,#<n>
- LSLS <Rd>,<Rm>,#<n>
- LSRS <Rd>,<Rm>,#<n>
- ASRS <Rd>,<Rm>,<Rs>
- LSLS <Rd>,<Rm>,<Rs>
- LSRS <Rd>,<Rm>,<Rs>
- RORS <Rd>,<Rm>,<Rs>
  
  MRS <Rd>,<spec_reg>
  MSR <spec_reg>,<Rn>
- MULS {<Rd>,} <Rn>, <Rm>
-
- NEG {<Rd>,} <Rm>
- RSBS {<Rd>,} <Rm>, #0
- ORRS {<Rd>,} <Rn>, <Rm>
- POP <registers>
- PUSH <registers>
-
-
- RSBS {<Rd>,} <Rn>, #<const>
- SBCS {<Rd>,} <Rn>, <Rm>
- STM{IA|EA} <Rn>!, <registers>
 
  STRB <Rt>, [<Rn>, <Rm> {, LSL #<shift>}]
-
-
- SUBS {<Rd>,} <Rn>, #<const>
- SUBS {<Rd>,} <Rn>, <Rm>
- SUB {<Rd>,} SP, #<const>
 */
 
 
@@ -160,7 +134,7 @@ extension Parser {
             comment = advance().kind.stringValue
         }
 
-        if peek().kind == .newline { advance() }
+        while peek().kind == .newline { advance() }
 
         return InstructionStatement(label: label, instruction: instruction, comment: comment)
     }
@@ -169,7 +143,6 @@ extension Parser {
         switch opcode {
         case .ADCS: return try adcsInstruction()
         case .ANDS: return try andsInstruction()
-        case .ASRS: return try asrsInstruction()
         case .ADD: return try addInstruction()
         case .CMP: return try cmpInstruction()
 
@@ -187,6 +160,20 @@ extension Parser {
         case .REV: return try revInstruction()
         case .REV16: return try rev16Instruction()
         case .REVSH: return try revshInstruction()
+
+        case .ASRS: return try asrsInstruction()
+        case .LSLS: return try lslsInstruction()
+        case .LSRS: return try lsrsInstruction()
+        case .RORS: return try rorsInstruction()
+        case .RSBS: return try rsbsInstruction()
+        case .ORRS: return try orrsInstruction()
+
+        case .MULS: return try mulsInstruction()
+        case .BICS: return try bicsInstruction()
+        case .EORS: return try eorsInstruction()
+        case .SBCS: return try sbcsInstruction()
+        case .SUBS: return try subsInstruction()
+        case .SUB: return try subInstruction()
             
         case .DMB: return try dmbInstruction()
         case .DSB: return try dsbInstruction()
@@ -208,6 +195,170 @@ extension Parser {
         case .YIELD: return YIELD()
         default: return NOP() // FIXME: throw error when all instructions are here.
         }
+    }
+
+    private func rsbsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+
+        if
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        {
+            return RSB_Immediate(d: r1, n: r2)
+        }
+
+        throw ParserError.unexpectedError
+    }
+
+
+    private func subInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+
+        if
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .immediate(imm) = arguments[2]
+        {
+            return SUB_SP_Immediate(imm7: imm)
+        }
+
+        throw ParserError.unexpectedError
+    }
+
+    private func subsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+
+        if
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .immediate(imm) = arguments[1]
+        {
+            return SUB_Immediate_T2(dn: r1, imm8: imm)
+        }
+
+        if
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .immediate(imm) = arguments[2]
+        {
+            return SUB_Immediate_T1(d: r1, n: r2, imm3: imm)
+        }
+
+        if
+            arguments.count == 3,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1],
+            case let .register(r3) = arguments[2]
+        {
+            return SUB_Register(d: r1, n: r2, m: r3)
+        }
+
+        throw ParserError.unexpectedError
+    }
+
+    private func sbcsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return SBC_Register(dn: r1, m: r2)
+    }
+
+    private func eorsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return EOR_Register(dn: r1, m: r2)
+    }
+
+    private func bicsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return BIC_Register(dn: r1, m: r2)
+    }
+
+    private func mulsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return MUL(n: r1, dm: r2)
+    }
+
+    private func orrsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return ORR_Register(dn: r1, m: r2)
+    }
+
+    private func rorsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count == 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+        return ROR_Register(dn: r1, m: r2)
+    }
+
+    private func lsrsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count >= 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+
+        if arguments.count == 3, case let .immediate(imm) = arguments[2] {
+            return LSR_Immediate(d: r1, m: r2, imm5: imm)
+        }
+        return LSR_Register(dn: r1, m: r2)
+    }
+
+    private func lslsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count >= 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+
+        if arguments.count == 3, case let .immediate(imm) = arguments[2] {
+            return LSL_Immediate(d: r1, m: r2, imm5: imm)
+        }
+        return LSL_Register(dn: r1, m: r2)
+    }
+
+    private func asrsInstruction() throws -> any Instruction {
+        let arguments = try argumentList()
+        guard
+            arguments.count >= 2,
+            case let .register(r1) = arguments[0],
+            case let .register(r2) = arguments[1]
+        else { throw ParserError.unexpectedError }
+
+        if arguments.count == 3, case let .immediate(imm) = arguments[2] {
+            return ASR_Immediate(d: r1, m: r2, imm5: imm)
+        }
+        return ASR_Register(dn: r1, m: r2)
     }
 
     private func strInstruction() throws -> any Instruction {
@@ -438,27 +589,6 @@ extension Parser {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
         return ISB(option: UInt16(opt))
-    }
-
-    private func asrsInstruction() throws -> any Instruction {
-        let arguments = try argumentList()
-
-        if arguments.count == 3 {
-            guard
-                case let .register(r1) = arguments[0],
-                case let .register(r2) = arguments[1],
-                case let .immediate(imm) = arguments[2]
-            else { throw ParserError.unexpectedError }
-            return ASR_Immediate(d: r1, m: r2, imm5: imm) // ASRS <Rd>, <Rm>, #<imm5>
-        }
-        if arguments.count == 2 {
-            guard
-                case let .register(r1) = arguments[0],
-                case let .register(r2) = arguments[1]
-            else { throw ParserError.unexpectedError }
-            return ASR_Register(dn: r1, m: r2) // ASRS <Rd>, <Rn>, <Rm>
-        }
-        throw ParserError.unexpectedError
     }
 
     private func andsInstruction() throws -> any Instruction {
