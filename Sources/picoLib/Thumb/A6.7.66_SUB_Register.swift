@@ -5,7 +5,7 @@
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 0  0  0| 1  1| 0| 1|      Rm|      Rn|      Rd|
-public struct SUB_Register: Instruction {
+public struct SUB_Register: CodableInstruction {
     public static var sig: [UInt16] = [0b0001_1010_0000_0000] // 0x1a00
     public static var msk: [UInt16] = [0b1111_1110_0000_0000]
     

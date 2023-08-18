@@ -7,12 +7,12 @@ public protocol InstructionDecodable {
     static func decode(_ data: [UInt16]) -> Instruction
 }
 
-public protocol Instruction: InstructionEncodable, InstructionDecodable, CustomDebugStringConvertible {
+public protocol CodableInstruction: InstructionEncodable, InstructionDecodable, CustomDebugStringConvertible {
     static var sig: [UInt16] { get }
     static var msk: [UInt16] { get }
 }
 
-extension Instruction {
+extension CodableInstruction {
     static func verifySignature(_ data: [UInt16]) {
         guard data.count == sig.count else { fatalError("Instruction requires exactly \(sig.count) word(s).") }
 

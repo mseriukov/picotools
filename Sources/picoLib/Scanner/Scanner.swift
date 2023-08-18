@@ -1,97 +1,5 @@
 
 public struct Token {
-    public enum Register: String {
-        case r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, sp, lr, pc
-
-        var number: UInt16 {
-            switch self {
-            case .r0: return 0
-            case .r1: return 1
-            case .r2: return 2
-            case .r3: return 3
-            case .r4: return 4
-            case .r5: return 5
-            case .r6: return 6
-            case .r7: return 7
-            case .r8: return 8
-            case .r9: return 9
-            case .r10: return 10
-            case .r11: return 11
-            case .r12: return 12
-            case .r13, .sp: return 13
-            case .r14, .lr: return 14
-            case .r15, .pc: return 15
-            }
-        }
-    }
-
-    public enum Opcode: String {
-        case ADCS
-        case ADD
-        case ADDS
-        case ANDS
-        case ASRS
-        case ADR
-        case B // TODO: conditions
-        case BICS
-        case BKPT
-        case BL
-        case BLX
-        case BX
-        case CMN
-        case CMP
-        case CPY
-        case CPYS
-        case DMB
-        case DSB
-        case EORS
-        case ISB
-        case LDM
-        case LDR
-        case LDRB
-        case LDRH
-        case LDRSB
-        case LDRSH
-        case LSLS
-        case LSRS
-        case MOVS
-        case MOV
-        case MRS
-        case MSR
-        case MULS
-        case MVNS
-        case NEG
-        case RSBS
-        case ORRS
-        case POP
-        case PUSH
-        case REV
-        case REV16
-        case REVSH
-        case RORS
-        case SBCS
-        case STM
-        case STMIA
-        case STMEA
-        case STR
-        case STRB
-        case STRH
-        case SUBS
-        case SUB
-        case SVC
-        case SXTB
-        case SXTH
-        case TST
-        case UDF
-        case UXTB
-        case UXTH
-        case SEV
-        case NOP
-        case WFE
-        case WFI
-        case YIELD
-    }
-
     public enum Kind {
         case leftParenthesis
         case rightParenthesis
@@ -116,7 +24,7 @@ public struct Token {
         case comment(String)
         case identifier(String)
         case number(Int)
-        case opcode(Opcode)
+        case opcode(Mnemonic)
         case register(Register)
 
         var isString: Bool {
@@ -183,7 +91,7 @@ public struct Token {
             }
         }
 
-        var opcodeValue: Opcode? {
+        var opcodeValue: Mnemonic? {
             switch self {
             case let .opcode(val): return val
             default: return nil
@@ -198,7 +106,7 @@ public struct Token {
         }
 
         init?(_ string: String) {
-            if let opcode = Opcode(rawValue: string) {
+            if let opcode = Mnemonic(rawValue: string) {
                 self = .opcode(opcode)
                 return
             }

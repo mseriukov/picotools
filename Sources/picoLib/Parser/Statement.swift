@@ -11,12 +11,12 @@ public protocol Statement {
 
 public class InstructionStatement: Statement {
     let label: String?
-    let instruction: any Instruction
+    let instruction: any CodableInstruction
     let comment: String?
 
     init(
         label: String?,
-        instruction: any Instruction,
+        instruction: any CodableInstruction,
         comment: String?
     ) {
         self.label = label

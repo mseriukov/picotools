@@ -5,7 +5,7 @@
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  0  0  0| 0|          imm5|      Rn|      Rt|
-public struct STRH_Immediate: Instruction {
+public struct STRH_Immediate: CodableInstruction {
     public static var sig: [UInt16] = [0b1000_0000_0000_0000] // 0x8000
     public static var msk: [UInt16] = [0b1111_1000_0000_0000]
     

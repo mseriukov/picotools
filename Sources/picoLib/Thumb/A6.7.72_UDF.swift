@@ -5,7 +5,7 @@
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  1  0  1| 1  1  1  0|                   imm8|
-public struct UDF_T1: Instruction {
+public struct UDF_T1: CodableInstruction {
     public static var sig: [UInt16] = [0b1101_1110_0000_0000] // 0xDE00
     public static var msk: [UInt16] = [0b1111_1111_0000_0000]
     
@@ -41,7 +41,7 @@ extension UDF_T1: CustomDebugStringConvertible {
 // ARMv6-M, ARMv7-M
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  1  1| 1  0| 1  1  1  1  1  1  1|       imm4| 1| 0  1  0|                              imm12|
-public struct UDF_T2: Instruction {
+public struct UDF_T2: CodableInstruction {
     public static var sig: [UInt16] = [0b1111_0111_1111_0000, 0b1010_0000_0000_0000] // 0xf7f0, 0xa000
     public static var msk: [UInt16] = [0b1111_1111_1111_0000, 0b1111_0000_0000_0000]
     

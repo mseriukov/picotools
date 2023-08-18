@@ -139,7 +139,7 @@ extension Parser {
         return InstructionStatement(label: label, instruction: instruction, comment: comment)
     }
 
-    private func instruction(opcode: Token.Opcode) throws -> any Instruction {
+    private func instruction(opcode: Mnemonic) throws -> any CodableInstruction {
         switch opcode {
         case .ADCS: return try adcsInstruction()
         case .ANDS: return try andsInstruction()
@@ -197,7 +197,7 @@ extension Parser {
         }
     }
 
-    private func rsbsInstruction() throws -> any Instruction {
+    private func rsbsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
 
         if
@@ -212,7 +212,7 @@ extension Parser {
     }
 
 
-    private func subInstruction() throws -> any Instruction {
+    private func subInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
 
         if
@@ -227,7 +227,7 @@ extension Parser {
         throw ParserError.unexpectedError
     }
 
-    private func subsInstruction() throws -> any Instruction {
+    private func subsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
 
         if
@@ -259,7 +259,7 @@ extension Parser {
         throw ParserError.unexpectedError
     }
 
-    private func sbcsInstruction() throws -> any Instruction {
+    private func sbcsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -269,7 +269,7 @@ extension Parser {
         return SBC_Register(dn: r1, m: r2)
     }
 
-    private func eorsInstruction() throws -> any Instruction {
+    private func eorsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -279,7 +279,7 @@ extension Parser {
         return EOR_Register(dn: r1, m: r2)
     }
 
-    private func bicsInstruction() throws -> any Instruction {
+    private func bicsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -289,7 +289,7 @@ extension Parser {
         return BIC_Register(dn: r1, m: r2)
     }
 
-    private func mulsInstruction() throws -> any Instruction {
+    private func mulsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -299,7 +299,7 @@ extension Parser {
         return MUL(n: r1, dm: r2)
     }
 
-    private func orrsInstruction() throws -> any Instruction {
+    private func orrsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -309,7 +309,7 @@ extension Parser {
         return ORR_Register(dn: r1, m: r2)
     }
 
-    private func rorsInstruction() throws -> any Instruction {
+    private func rorsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -319,7 +319,7 @@ extension Parser {
         return ROR_Register(dn: r1, m: r2)
     }
 
-    private func lsrsInstruction() throws -> any Instruction {
+    private func lsrsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count >= 2,
@@ -333,7 +333,7 @@ extension Parser {
         return LSR_Register(dn: r1, m: r2)
     }
 
-    private func lslsInstruction() throws -> any Instruction {
+    private func lslsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count >= 2,
@@ -347,7 +347,7 @@ extension Parser {
         return LSL_Register(dn: r1, m: r2)
     }
 
-    private func asrsInstruction() throws -> any Instruction {
+    private func asrsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count >= 2,
@@ -361,7 +361,7 @@ extension Parser {
         return ASR_Register(dn: r1, m: r2)
     }
 
-    private func strInstruction() throws -> any Instruction {
+    private func strInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -372,7 +372,7 @@ extension Parser {
         return STR_Register(t: r1, n: r2, m: r3)
     }
 
-    private func strhInstruction() throws -> any Instruction {
+    private func strhInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -383,7 +383,7 @@ extension Parser {
         return STRH_Register(t: r1, n: r2, m: r3)
     }
 
-    private func ldrhInstruction() throws -> any Instruction {
+    private func ldrhInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -394,7 +394,7 @@ extension Parser {
         return LDRH_Register(t: r1, n: r2, m: r3)
     }
 
-    private func ldrbInstruction() throws -> any Instruction {
+    private func ldrbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -405,7 +405,7 @@ extension Parser {
         return LDRB_Register(t: r1, n: r2, m: r3)
     }
 
-    private func ldrsbInstruction() throws -> any Instruction {
+    private func ldrsbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -416,7 +416,7 @@ extension Parser {
         return LDRSB_Register(t: r1, n: r2, m: r3)
     }
 
-    private func ldrshInstruction() throws -> any Instruction {
+    private func ldrshInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 3,
@@ -429,7 +429,7 @@ extension Parser {
 
 
 
-    private func mvnsInstruction() throws -> any Instruction {
+    private func mvnsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -439,7 +439,7 @@ extension Parser {
         return MVN_Register(d: r1, m: r2)
     }
 
-    private func revInstruction() throws -> any Instruction {
+    private func revInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -449,7 +449,7 @@ extension Parser {
         return REV(d: r1, m: r2)
     }
 
-    private func rev16Instruction() throws -> any Instruction {
+    private func rev16Instruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -459,7 +459,7 @@ extension Parser {
         return REV16(d: r1, m: r2)
     }
 
-    private func revshInstruction() throws -> any Instruction {
+    private func revshInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -469,7 +469,7 @@ extension Parser {
         return REVSH(d: r1, m: r2)
     }
 
-    private func sxtbInstruction() throws -> any Instruction {
+    private func sxtbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -479,7 +479,7 @@ extension Parser {
         return SXTB(d: r1, m: r2)
     }
 
-    private func sxthInstruction() throws -> any Instruction {
+    private func sxthInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -489,7 +489,7 @@ extension Parser {
         return SXTH(d: r1, m: r2)
     }
 
-    private func uxtbInstruction() throws -> any Instruction {
+    private func uxtbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -499,7 +499,7 @@ extension Parser {
         return UXTB(d: r1, m: r2)
     }
 
-    private func uxthInstruction() throws -> any Instruction {
+    private func uxthInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -509,7 +509,7 @@ extension Parser {
         return UXTH(d: r1, m: r2)
     }
 
-    private func tstInstruction() throws -> any Instruction {
+    private func tstInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -519,7 +519,7 @@ extension Parser {
         return TST_Register(n: r1, m: r2)
     }
 
-    private func cmnInstruction() throws -> any Instruction {
+    private func cmnInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -529,15 +529,15 @@ extension Parser {
         return CMN_Register(n: r1, m: r2)
     }
 
-    private func cpyInstruction() throws -> any Instruction {
+    private func cpyInstruction() throws -> any CodableInstruction {
         return try movInstruction()
     }
 
-    private func cpysInstruction() throws -> any Instruction {
+    private func cpysInstruction() throws -> any CodableInstruction {
         return try movsInstruction()
     }
 
-    private func movInstruction() throws -> any Instruction {
+    private func movInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -547,7 +547,7 @@ extension Parser {
         return MOV_Register_T1(d: r1, m: r2)
     }
 
-    private func movsInstruction() throws -> any Instruction {
+    private func movsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -557,13 +557,13 @@ extension Parser {
         return MOV_Register_T2(d: r1, m: r2)
     }
 
-    private func svcInstruction() throws -> any Instruction {
+    private func svcInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
         return SVC(imm8: UInt16(opt))
     }
 
-    private func udfInstruction() throws -> any Instruction {
+    private func udfInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(imm) = arguments[0] else { throw ParserError.unexpectedError }
         let uimm = UInt16(imm)
@@ -573,25 +573,25 @@ extension Parser {
         return UDF_T2(imm16: uimm)
     }
 
-    private func dmbInstruction() throws -> any Instruction {
+    private func dmbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
         return DMB(option: UInt16(opt))
     }
 
-    private func dsbInstruction() throws -> any Instruction {
+    private func dsbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
         return DSB(option: UInt16(opt))
     }
 
-    private func isbInstruction() throws -> any Instruction {
+    private func isbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
         return ISB(option: UInt16(opt))
     }
 
-    private func andsInstruction() throws -> any Instruction {
+    private func andsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -601,7 +601,7 @@ extension Parser {
         return AND_Register(dn: r1, m: r2) // ANDS {<Rd>,} <Rn>, <Rm>
     }
 
-    private func cmpInstruction() throws -> any Instruction {
+    private func cmpInstruction() throws -> any CodableInstruction {
         // CMP <Rn>, #<const>
         let arguments = try argumentList()
         guard
@@ -623,7 +623,7 @@ extension Parser {
         }
     }
 
-    private func adcsInstruction() throws -> any Instruction {
+    private func adcsInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard
             arguments.count == 2,
@@ -633,7 +633,7 @@ extension Parser {
         return ADC_Register(dn: r1, m: r2) // ADCS <Rn>, <Rm>
     }
 
-    private func addInstruction() throws -> any Instruction {
+    private func addInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         switch arguments.count {
         case 2:
@@ -642,7 +642,7 @@ extension Parser {
                 case let .register(r2) = arguments[1]
             else { throw ParserError.unexpectedError }
 
-            if r1 == Token.Register.sp.number {
+            if r1 == Register.sp.number {
                 return ADD_SP_Register_T2(m: r2) // ADD SP,<Rm>
             }
             return ADD_Register_T2(dn: r1, m: r2) // ADD <Rdn>,<Rm>
@@ -654,15 +654,15 @@ extension Parser {
             else { throw ParserError.unexpectedError }
 
             if case let .register(r3) = arguments[2] {
-                guard r1 == r3, r2 == Token.Register.sp.number else {
+                guard r1 == r3, r2 == Register.sp.number else {
                     throw ParserError.unexpectedError
                 }
                 return ADD_SP_Register_T1(m: r1) // ADD <Rdm>, SP, <Rdm>
             } else if case let .immediate(imm) = arguments[2] {
-                guard r2 == Token.Register.sp.number else {
+                guard r2 == Register.sp.number else {
                     throw ParserError.unexpectedError
                 }
-                if r1 == Token.Register.sp.number {
+                if r1 == Register.sp.number {
                     return ADD_SP_Immediate_T2(imm7: imm)
                 } else {
                     return ADD_SP_Immediate_T1(d: r1, imm8: imm) // ADD <Rd>,SP,#<imm8>

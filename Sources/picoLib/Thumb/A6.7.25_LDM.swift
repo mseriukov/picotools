@@ -6,7 +6,7 @@
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  1  0  0| 1|      Rn|          register_list|
-public struct LDM: Instruction {
+public struct LDM: CodableInstruction {
     public static var sig: [UInt16] = [0b1100_1000_0000_0000] // 0xC800
     public static var msk: [UInt16] = [0b1111_1000_0000_0000]
     

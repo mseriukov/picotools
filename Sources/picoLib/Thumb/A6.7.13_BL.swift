@@ -11,7 +11,7 @@
 // if InITBlock() && !LastInITBlock() then UNPREDICTABLE;
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // |                    | S|I1|I2|                        imm10|                           imm11| 0|
-public struct BL: Instruction {
+public struct BL: CodableInstruction {
     public static var sig: [UInt16] = [0b1111_0000_0000_0000, 0b1101_0000_0000_0000] // 0xf000, 0xd000
     public static var msk: [UInt16] = [0b1111_1000_0000_0000, 0b1101_0000_0000_0000]
 

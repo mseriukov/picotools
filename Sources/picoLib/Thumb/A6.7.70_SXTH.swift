@@ -5,7 +5,7 @@
 // ARMv6-M, ARMv7-M
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  0  1  1| 0  0  1  0| 0  0|      Rm|      Rd|
-public struct SXTH: Instruction {
+public struct SXTH: CodableInstruction {
     public static var sig: [UInt16] = [0b1011_0010_0000_0000] // 0xb200
     public static var msk: [UInt16] = [0b1111_1111_1100_0000]
     

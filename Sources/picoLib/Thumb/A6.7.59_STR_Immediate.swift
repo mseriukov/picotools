@@ -5,7 +5,7 @@
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 0  1  1| 0| 0|          imm5|      Rn|      Rt|
-public struct STR_Immediate_T1: Instruction {
+public struct STR_Immediate_T1: CodableInstruction {
     public static var sig: [UInt16] = [0b0110_0000_0000_0000] // 0x6000
     public static var msk: [UInt16] = [0b1111_1000_0000_0000]
 
@@ -51,7 +51,7 @@ extension STR_Immediate_T1: CustomDebugStringConvertible {
 // All versions of the Thumb instruction set.
 // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
 // | 1  0  0  1| 0|      Rt|                   imm8|
-struct STR_Immediate_T2: Instruction {
+struct STR_Immediate_T2: CodableInstruction {
     public static var sig: [UInt16] = [0b1001_0000_0000_0000] // 0x9000
     public static var msk: [UInt16] = [0b1111_1000_0000_0000]
     
