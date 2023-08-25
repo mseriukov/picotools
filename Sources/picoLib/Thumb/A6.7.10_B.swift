@@ -18,7 +18,7 @@ public struct B_T1: CodableInstruction {
     }
 
     public func encode() -> [UInt16] {
-        guard cond != Condition.al else { fatalError("Consider using encoding T2 for condition AL.") }
+        guard cond != Condition.always.rawValue else { fatalError("Consider using encoding T2 for condition AL.") }
         var low: UInt16 = Self.sig[0]
         set4(&low, cond, 8)
         set8(&low, UInt16(bitPattern: imm8), 0)

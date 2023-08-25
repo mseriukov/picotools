@@ -25,6 +25,9 @@ public struct Token {
         case identifier(String)
         case number(Int)
         case opcode(Mnemonic)
+        case setFlag
+        case qualifier(Qualifier)
+        case condition(Condition)
         case register(Register)
 
         var isString: Bool {
@@ -75,6 +78,14 @@ public struct Token {
             }
         }
 
+        var isQualifier: Bool {
+            if case .qualifier = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
         var stringValue: String? {
             switch self {
             case let .string(val): return val
@@ -98,6 +109,13 @@ public struct Token {
             }
         }
 
+        var qualifierValue: Qualifier? {
+            switch self {
+            case let .qualifier(val): return val
+            default: return nil
+            }
+        }
+
         var registerValue: Register? {
             switch self {
             case let .register(val): return val
@@ -110,6 +128,12 @@ public struct Token {
                 self = .opcode(opcode)
                 return
             }
+
+            if let condition = Condition(String(string.suffix(2))) {
+
+            }
+
+
             if let register = Register(rawValue: string) {
                 self = .register(register)
                 return
@@ -341,6 +365,8 @@ extension Token.Kind: CustomDebugStringConvertible {
         case let .number(val): return "NUM(\(val))"
         case .newline: return "NEWLINE"
         case let .opcode(val): return "OPCODE(\(val))"
+        case let .condition(cond): return "COND(\(cond)"
+        case .setFlag: return "S"
         case let .register(val): return "REG(\(val))"
         case let .comment(val): return "COMMENT(\(val))"
         }

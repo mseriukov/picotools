@@ -127,6 +127,19 @@ extension Parser {
         
         let token = try consume({ $0.isOpcode }, "Opcode expected")
         let opcode = token.kind.opcodeValue!
+
+        var setFlag = false
+        if peek().kind == .setFlag {
+            setFlag = true
+            advance()
+        }
+
+        var qualifier: Qualifier?
+        if peek().kind.isQualifier {
+            qualifier = advance().kind.qualifierValue
+        }
+
+
         let instruction = try instruction(opcode: opcode)
 
         var comment: String? = nil
@@ -139,7 +152,7 @@ extension Parser {
         return InstructionStatement(label: label, instruction: instruction, comment: comment)
     }
 
-    private func instruction(opcode: Mnemonic) throws -> any CodableInstruction {
+    private func instruction(opcode: Mnemonic, setFlag: Bool, qualifier: Qualifier) throws -> any CodableInstruction {
         switch opcode {
         case .ADCS: return try adcsInstruction()
         case .ANDS: return try andsInstruction()
