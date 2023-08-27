@@ -24,10 +24,7 @@ public struct Token {
         case comment(String)
         case identifier(String)
         case number(Int)
-        case opcode(Mnemonic)
-        case setFlag
-        case qualifier(Qualifier)
-        case condition(Condition)
+        case opcode(Mnemonic, Condition?, Qualifier?)
         case register(Register)
 
         var isString: Bool {
@@ -78,14 +75,6 @@ public struct Token {
             }
         }
 
-        var isQualifier: Bool {
-            if case .qualifier = self  {
-                return true
-            } else {
-                return false
-            }
-        }
-
         var stringValue: String? {
             switch self {
             case let .string(val): return val
@@ -102,16 +91,9 @@ public struct Token {
             }
         }
 
-        var opcodeValue: Mnemonic? {
+        var opcodeValue: (Mnemonic, Condition?, Qualifier?)? {
             switch self {
-            case let .opcode(val): return val
-            default: return nil
-            }
-        }
-
-        var qualifierValue: Qualifier? {
-            switch self {
-            case let .qualifier(val): return val
+            case let .opcode(mnemonic, condition, qualifier): return (mnemonic, condition, qualifier)
             default: return nil
             }
         }
@@ -124,15 +106,29 @@ public struct Token {
         }
 
         init?(_ string: String) {
-            if let opcode = Mnemonic(rawValue: string) {
-                self = .opcode(opcode)
+            var string = string
+
+            var qualifier: Qualifier?
+            if let _qualifier = Qualifier(String(string.suffix(2))) {
+                string.removeLast(2)
+                qualifier = _qualifier
+            }
+
+            if let mnemonic = Mnemonic(string) {
+                self = .opcode(mnemonic, nil, qualifier)
                 return
             }
 
-            if let condition = Condition(String(string.suffix(2))) {
-
+            var condition: Condition?
+            if let _condition = Condition(String(string.suffix(2))) {
+                string.removeLast(2)
+                condition = _condition
             }
 
+            if let mnemonic = Mnemonic(string) {
+                self = .opcode(mnemonic, condition, qualifier)
+                return
+            }
 
             if let register = Register(rawValue: string) {
                 self = .register(register)
@@ -327,7 +323,7 @@ public class Scanner {
     }
 
     private func identifier() throws -> Token.Kind {
-        while isAlphaNumeric(peek()) { advance() }
+        while isAlphaNumeric(peek()) || peek() == "." { advance() }
         let str = String(source[start..<current])
         return .init(str) ?? .identifier(str)
     }
@@ -364,9 +360,7 @@ extension Token.Kind: CustomDebugStringConvertible {
         case let .identifier(val): return "IDENT(\(val))"
         case let .number(val): return "NUM(\(val))"
         case .newline: return "NEWLINE"
-        case let .opcode(val): return "OPCODE(\(val))"
-        case let .condition(cond): return "COND(\(cond)"
-        case .setFlag: return "S"
+        case let .opcode(m, c, q): return "OPCODE(\(m.stringValue)\(c?.stringValue ?? "")\(q?.stringValue ?? ""))"
         case let .register(val): return "REG(\(val))"
         case let .comment(val): return "COMMENT(\(val))"
         }
