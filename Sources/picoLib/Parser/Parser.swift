@@ -189,12 +189,12 @@ extension Parser {
         case .STR: return try strInstruction()
         case .STRH: return try strhInstruction()
 
-        case .NOP: return NOP()
-        case .SEV: return SEV()
-        case .WFE: return WFE()
-        case .WFI: return WFI()
-        case .YIELD: return YIELD()
-        default: return NOP() // FIXME: throw error when all instructions are here.
+        case .NOP: return Thumb.NOP()
+        case .SEV: return Thumb.SEV()
+        case .WFE: return Thumb.WFE()
+        case .WFI: return Thumb.WFI()
+        case .YIELD: return Thumb.YIELD()
+        default: return Thumb.NOP() // FIXME: throw error when all instructions are here.
         }
     }
 
@@ -206,7 +206,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         {
-            return RSB_Immediate(d: r1, n: r2)
+            return Thumb.RSB_Immediate(d: r1, n: r2)
         }
 
         throw ParserError.unexpectedError
@@ -222,7 +222,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .immediate(imm) = arguments[2]
         {
-            return SUB_SP_Immediate(imm7: imm)
+            return Thumb.SUB_SP_Immediate(imm7: imm)
         }
 
         throw ParserError.unexpectedError
@@ -236,7 +236,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .immediate(imm) = arguments[1]
         {
-            return SUB_Immediate_T2(dn: r1, imm8: imm)
+            return Thumb.SUB_Immediate_T2(dn: r1, imm8: imm)
         }
 
         if
@@ -245,7 +245,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .immediate(imm) = arguments[2]
         {
-            return SUB_Immediate_T1(d: r1, n: r2, imm3: imm)
+            return Thumb.SUB_Immediate_T1(d: r1, n: r2, imm3: imm)
         }
 
         if
@@ -254,7 +254,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         {
-            return SUB_Register(d: r1, n: r2, m: r3)
+            return Thumb.SUB_Register(d: r1, n: r2, m: r3)
         }
 
         throw ParserError.unexpectedError
@@ -267,7 +267,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return SBC_Register(dn: r1, m: r2)
+        return Thumb.SBC_Register(dn: r1, m: r2)
     }
 
     private func eorsInstruction() throws -> any CodableInstruction {
@@ -277,7 +277,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return EOR_Register(dn: r1, m: r2)
+        return Thumb.EOR_Register(dn: r1, m: r2)
     }
 
     private func bicsInstruction() throws -> any CodableInstruction {
@@ -287,7 +287,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return BIC_Register(dn: r1, m: r2)
+        return Thumb.BIC_Register(dn: r1, m: r2)
     }
 
     private func mulsInstruction() throws -> any CodableInstruction {
@@ -297,7 +297,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return MUL(n: r1, dm: r2)
+        return Thumb.MUL(n: r1, dm: r2)
     }
 
     private func orrsInstruction() throws -> any CodableInstruction {
@@ -307,7 +307,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return ORR_Register(dn: r1, m: r2)
+        return Thumb.ORR_Register(dn: r1, m: r2)
     }
 
     private func rorsInstruction() throws -> any CodableInstruction {
@@ -317,7 +317,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return ROR_Register(dn: r1, m: r2)
+        return Thumb.ROR_Register(dn: r1, m: r2)
     }
 
     private func lsrsInstruction() throws -> any CodableInstruction {
@@ -329,9 +329,9 @@ extension Parser {
         else { throw ParserError.unexpectedError }
 
         if arguments.count == 3, case let .immediate(imm) = arguments[2] {
-            return LSR_Immediate(d: r1, m: r2, imm5: imm)
+            return Thumb.LSR_Immediate(d: r1, m: r2, imm5: imm)
         }
-        return LSR_Register(dn: r1, m: r2)
+        return Thumb.LSR_Register(dn: r1, m: r2)
     }
 
     private func lslsInstruction() throws -> any CodableInstruction {
@@ -343,9 +343,9 @@ extension Parser {
         else { throw ParserError.unexpectedError }
 
         if arguments.count == 3, case let .immediate(imm) = arguments[2] {
-            return LSL_Immediate(d: r1, m: r2, imm5: imm)
+            return Thumb.LSL_Immediate(d: r1, m: r2, imm5: imm)
         }
-        return LSL_Register(dn: r1, m: r2)
+        return Thumb.LSL_Register(dn: r1, m: r2)
     }
 
     private func asrsInstruction() throws -> any CodableInstruction {
@@ -357,9 +357,9 @@ extension Parser {
         else { throw ParserError.unexpectedError }
 
         if arguments.count == 3, case let .immediate(imm) = arguments[2] {
-            return ASR_Immediate(d: r1, m: r2, imm5: imm)
+            return Thumb.ASR_Immediate(d: r1, m: r2, imm5: imm)
         }
-        return ASR_Register(dn: r1, m: r2)
+        return Thumb.ASR_Register(dn: r1, m: r2)
     }
 
     private func strInstruction() throws -> any CodableInstruction {
@@ -370,7 +370,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return STR_Register(t: r1, n: r2, m: r3)
+        return Thumb.STR_Register(t: r1, n: r2, m: r3)
     }
 
     private func strhInstruction() throws -> any CodableInstruction {
@@ -381,7 +381,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return STRH_Register(t: r1, n: r2, m: r3)
+        return Thumb.STRH_Register(t: r1, n: r2, m: r3)
     }
 
     private func ldrhInstruction() throws -> any CodableInstruction {
@@ -392,7 +392,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return LDRH_Register(t: r1, n: r2, m: r3)
+        return Thumb.LDRH_Register(t: r1, n: r2, m: r3)
     }
 
     private func ldrbInstruction() throws -> any CodableInstruction {
@@ -403,7 +403,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return LDRB_Register(t: r1, n: r2, m: r3)
+        return Thumb.LDRB_Register(t: r1, n: r2, m: r3)
     }
 
     private func ldrsbInstruction() throws -> any CodableInstruction {
@@ -414,7 +414,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return LDRSB_Register(t: r1, n: r2, m: r3)
+        return Thumb.LDRSB_Register(t: r1, n: r2, m: r3)
     }
 
     private func ldrshInstruction() throws -> any CodableInstruction {
@@ -425,7 +425,7 @@ extension Parser {
             case let .register(r2) = arguments[1],
             case let .register(r3) = arguments[2]
         else { throw ParserError.unexpectedError }
-        return LDRSH_Register(t: r1, n: r2, m: r3)
+        return Thumb.LDRSH_Register(t: r1, n: r2, m: r3)
     }
 
 
@@ -437,7 +437,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return MVN_Register(d: r1, m: r2)
+        return Thumb.MVN_Register(d: r1, m: r2)
     }
 
     private func revInstruction() throws -> any CodableInstruction {
@@ -447,7 +447,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return REV(d: r1, m: r2)
+        return Thumb.REV(d: r1, m: r2)
     }
 
     private func rev16Instruction() throws -> any CodableInstruction {
@@ -457,7 +457,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return REV16(d: r1, m: r2)
+        return Thumb.REV16(d: r1, m: r2)
     }
 
     private func revshInstruction() throws -> any CodableInstruction {
@@ -467,7 +467,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return REVSH(d: r1, m: r2)
+        return Thumb.REVSH(d: r1, m: r2)
     }
 
     private func sxtbInstruction() throws -> any CodableInstruction {
@@ -477,7 +477,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return SXTB(d: r1, m: r2)
+        return Thumb.SXTB(d: r1, m: r2)
     }
 
     private func sxthInstruction() throws -> any CodableInstruction {
@@ -487,7 +487,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return SXTH(d: r1, m: r2)
+        return Thumb.SXTH(d: r1, m: r2)
     }
 
     private func uxtbInstruction() throws -> any CodableInstruction {
@@ -497,7 +497,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return UXTB(d: r1, m: r2)
+        return Thumb.UXTB(d: r1, m: r2)
     }
 
     private func uxthInstruction() throws -> any CodableInstruction {
@@ -507,7 +507,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return UXTH(d: r1, m: r2)
+        return Thumb.UXTH(d: r1, m: r2)
     }
 
     private func tstInstruction() throws -> any CodableInstruction {
@@ -517,7 +517,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return TST_Register(n: r1, m: r2)
+        return Thumb.TST_Register(n: r1, m: r2)
     }
 
     private func cmnInstruction() throws -> any CodableInstruction {
@@ -527,7 +527,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return CMN_Register(n: r1, m: r2)
+        return Thumb.CMN_Register(n: r1, m: r2)
     }
 
     private func cpyInstruction() throws -> any CodableInstruction {
@@ -545,7 +545,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return MOV_Register_T1(d: r1, m: r2)
+        return Thumb.MOV_Register_T1(d: r1, m: r2)
     }
 
     private func movsInstruction() throws -> any CodableInstruction {
@@ -555,13 +555,13 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return MOV_Register_T2(d: r1, m: r2)
+        return Thumb.MOV_Register_T2(d: r1, m: r2)
     }
 
     private func svcInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
-        return SVC(imm8: UInt16(opt))
+        return Thumb.SVC(imm8: UInt16(opt))
     }
 
     private func udfInstruction() throws -> any CodableInstruction {
@@ -569,27 +569,27 @@ extension Parser {
         guard case let .immediate(imm) = arguments[0] else { throw ParserError.unexpectedError }
         let uimm = UInt16(imm)
         if uimm < 256 {
-            return UDF_T1(imm8: uimm)
+            return Thumb.UDF_T1(imm8: uimm)
         }
-        return UDF_T2(imm16: uimm)
+        return Thumb.UDF_T2(imm16: uimm)
     }
 
     private func dmbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
-        return DMB(option: UInt16(opt))
+        return Thumb.DMB(option: UInt16(opt))
     }
 
     private func dsbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
-        return DSB(option: UInt16(opt))
+        return Thumb.DSB(option: UInt16(opt))
     }
 
     private func isbInstruction() throws -> any CodableInstruction {
         let arguments = try argumentList()
         guard case let .immediate(opt) = arguments[0] else { throw ParserError.unexpectedError }
-        return ISB(option: UInt16(opt))
+        return Thumb.ISB(option: UInt16(opt))
     }
 
     private func andsInstruction() throws -> any CodableInstruction {
@@ -599,7 +599,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return AND_Register(dn: r1, m: r2) // ANDS {<Rd>,} <Rn>, <Rm>
+        return Thumb.AND_Register(dn: r1, m: r2) // ANDS {<Rd>,} <Rn>, <Rm>
     }
 
     private func cmpInstruction() throws -> any CodableInstruction {
@@ -613,12 +613,12 @@ extension Parser {
         if case let .register(r2) = arguments[1] {
             // TODO: Verify necessary conditions.
             if r1 < 8 && r2 < 8 {
-                return CMP_Register_T1(n: r1, m: r2)
+                return Thumb.CMP_Register_T1(n: r1, m: r2)
             }
-            return CMP_Register_T2(n: r1, m: r2)
+            return Thumb.CMP_Register_T2(n: r1, m: r2)
 
         } else if case let .immediate(imm) = arguments[1] {
-            return CMP_Immediate(n: r1, imm8: imm)
+            return Thumb.CMP_Immediate(n: r1, imm8: imm)
         } else {
             throw ParserError.unexpectedError
         }
@@ -631,7 +631,7 @@ extension Parser {
             case let .register(r1) = arguments[0],
             case let .register(r2) = arguments[1]
         else { throw ParserError.unexpectedError }
-        return ADC_Register(dn: r1, m: r2) // ADCS <Rn>, <Rm>
+        return Thumb.ADC_Register(dn: r1, m: r2) // ADCS <Rn>, <Rm>
     }
 
     private func addInstruction() throws -> any CodableInstruction {
@@ -644,9 +644,9 @@ extension Parser {
             else { throw ParserError.unexpectedError }
 
             if r1 == Register.sp.number {
-                return ADD_SP_Register_T2(m: r2) // ADD SP,<Rm>
+                return Thumb.ADD_SP_Register_T2(m: r2) // ADD SP,<Rm>
             }
-            return ADD_Register_T2(dn: r1, m: r2) // ADD <Rdn>,<Rm>
+            return Thumb.ADD_Register_T2(dn: r1, m: r2) // ADD <Rdn>,<Rm>
 
         case 3:
             guard
@@ -658,15 +658,15 @@ extension Parser {
                 guard r1 == r3, r2 == Register.sp.number else {
                     throw ParserError.unexpectedError
                 }
-                return ADD_SP_Register_T1(m: r1) // ADD <Rdm>, SP, <Rdm>
+                return Thumb.ADD_SP_Register_T1(m: r1) // ADD <Rdm>, SP, <Rdm>
             } else if case let .immediate(imm) = arguments[2] {
                 guard r2 == Register.sp.number else {
                     throw ParserError.unexpectedError
                 }
                 if r1 == Register.sp.number {
-                    return ADD_SP_Immediate_T2(imm7: imm)
+                    return Thumb.ADD_SP_Immediate_T2(imm7: imm)
                 } else {
-                    return ADD_SP_Immediate_T1(d: r1, imm8: imm) // ADD <Rd>,SP,#<imm8>
+                    return Thumb.ADD_SP_Immediate_T1(d: r1, imm8: imm) // ADD <Rd>,SP,#<imm8>
                 }
             } else {
                 throw ParserError.unexpectedError
