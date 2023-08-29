@@ -2,6 +2,7 @@ public enum Mnemonic {
     case ADC
     case ADCS
     case ADD
+    case ADDS
     case ANDS
     case ASRS
     case ADR
@@ -44,8 +45,6 @@ public enum Mnemonic {
     case RORS
     case SBCS
     case STM
-    case STMIA
-    case STMEA
     case STR
     case STRB
     case STRH
@@ -86,7 +85,7 @@ public enum Mnemonic {
         case Self.DSB.stringValue: self = .DSB
         case Self.EORS.stringValue: self = .EORS
         case Self.ISB.stringValue: self = .ISB
-        case Self.LDM.stringValue: self = .LDM
+        case Self.LDM.stringValue, "ldmia", "ldmfd": self = .LDM
         case Self.LDR.stringValue: self = .LDR
         case Self.LDRB.stringValue: self = .LDRB
         case Self.LDRH.stringValue: self = .LDRH
@@ -110,9 +109,7 @@ public enum Mnemonic {
         case Self.REVSH.stringValue: self = .REVSH
         case Self.RORS.stringValue: self = .RORS
         case Self.SBCS.stringValue: self = .SBCS
-        case Self.STM.stringValue: self = .STM
-        case Self.STMIA.stringValue: self = .STMIA
-        case Self.STMEA.stringValue: self = .STMEA
+        case Self.STM.stringValue, "stmia", "stmea": self = .STM
         case Self.STR.stringValue: self = .STR
         case Self.STRB.stringValue: self = .STRB
         case Self.STRH.stringValue: self = .STRH
@@ -139,6 +136,7 @@ public enum Mnemonic {
         case .ADC: return "adc"
         case .ADCS: return "adcs"
         case .ADD: return "add"
+        case .ADDS: return "adds"
         case .ANDS: return "ands"
         case .ASRS: return "asrs"
         case .ADR: return "adr"
@@ -181,8 +179,6 @@ public enum Mnemonic {
         case .RORS: return "rors"
         case .SBCS: return "sbcs"
         case .STM: return "stm"
-        case .STMIA: return "stmia"
-        case .STMEA: return "stmea"
         case .STR: return "str"
         case .STRB: return "strb"
         case .STRH: return "strh"

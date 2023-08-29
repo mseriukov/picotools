@@ -11,12 +11,12 @@ public protocol Statement {
 
 public class InstructionStatement: Statement {
     let label: String?
-    let instruction: any CodableInstruction
+    let instruction: any Instruction
     let comment: String?
 
     init(
         label: String?,
-        instruction: any CodableInstruction,
+        instruction: any Instruction,
         comment: String?
     ) {
         self.label = label
@@ -36,7 +36,9 @@ extension InstructionStatement: CustomDebugStringConvertible {
             result += "\(label):\n"
         }
         result += String(repeating: " ", count: 4)
-        result += instruction.encode().map { String(format: "%04X", $0) }.joined().byAddingRightPadding(10)
+        result += ((try? instruction.encode(symbols: [:])) ?? [])
+            .map { String(format: "%04X", $0) }
+            .joined().byAddingRightPadding(10)
         result += "\(instruction)".byAddingRightPadding(20)
         if let comment {
             result += " \(comment)"

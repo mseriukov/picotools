@@ -7,6 +7,8 @@ extension Thumb {
     // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
     // | 0  1  0  0  0  0| 0  1  0  1|      Rm|     Rdn|
     public struct ADC_Register: CodableInstruction {
+        public var debugDescription: String {""}
+
         public static var sig: [UInt16] = [0b0100_0001_0100_0000] // 0x4140
         public static var msk: [UInt16] = [0b1111_1111_1100_0000]
 
@@ -33,11 +35,5 @@ extension Thumb {
                 m: get3(low, 3)
             )
         }
-    }
-}
-
-extension Thumb.ADC_Register: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        "ADCS r\(dn), r\(m)"
     }
 }

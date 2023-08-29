@@ -7,6 +7,7 @@ extension Thumb {
     // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
     // | 0  0  0| 1  1| 0| 0|      Rm|      Rn|      Rd|
     public struct ADD_Register_T1: CodableInstruction {
+        public var debugDescription: String {""}
         public static var sig: [UInt16] = [0b0001_1000_0000_0000] // 0x1800
         public static var msk: [UInt16] = [0b1111_1000_0000_0000]
 
@@ -45,6 +46,7 @@ extension Thumb {
     // |15|14|13|12|11|10| 9| 8| 7| 6| 5| 4| 3| 2| 1| 0|
     // | 0  1  0  0  0  1| 0  0|dn|         Rm|     Rdn|
     public struct ADD_Register_T2: CodableInstruction {
+        public var debugDescription: String {""}
         public static var sig: [UInt16] = [0b0100_0100_0000_0000] // 0x4400
         public static var msk: [UInt16] = [0b1111_1111_0000_0000]
 
@@ -71,17 +73,5 @@ extension Thumb {
                 m: split.r1
             )
         }
-    }
-}
-
-extension Thumb.ADD_Register_T1: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        "ADDS r\(d), r\(n), r\(m)"
-    }
-}
-
-extension Thumb.ADD_Register_T2: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        "ADD r\(dn), r\(m)"
     }
 }

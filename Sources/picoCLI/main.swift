@@ -2,7 +2,7 @@ import Foundation
 import picoLib
 
 let source = """
-    addeq.w r0, sp, #40
+    add r0, sp, #40
 main:
     YIELD               ; This is a comment
     ADD r0, r0
