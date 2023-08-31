@@ -13,50 +13,25 @@
  ADR <Rd>, <label>
  B{<c>} <label>
 
- LDR <Rt>, [PC, #<imm>]
- LDR <Rt>, <label>
- LDR <Rt>, [<Rn> {, #+/-<imm>}]
- LDR <Rt>, [<Rn>, <Rm>]
-
  BKPT {#}<imm8>
  BL <label>
  BLX <Rm>
  BX <Rm>
 
  LDM <Rn>{!}, <registers>
- POP <registers>
- PUSH <registers>
  STM{IA|EA} <Rn>!, <registers>
-
- LDRB <Rt>, [<Rn> {, #+/-<imm>}]
- LDRH <Rt>, [<Rn> {, #+/-<imm>}]
- STR <Rt>, [<Rn> {, #+/-<imm>}]
- STRH <Rt>, [<Rn> {, #+/-<imm>}]
- STRB <Rt>, [<Rn> {, #+/-<imm>}]
-
- MOVS <Rd>, #<const>
- MOVS <Rd>,<Rm>,ASR #<n>
- MOVS <Rd>,<Rm>,LSL #<n>
- MOVS <Rd>,<Rm>,LSR #<n>
- MOVS <Rd>,<Rm>,ASR <Rs>
- MOVS <Rd>,<Rm>,LSL <Rs>
- MOVS <Rd>,<Rm>,LSR <Rs>
- MOVS <Rd>,<Rm>,ROR <Rs>
- 
- MRS <Rd>,<spec_reg>
- MSR <spec_reg>,<Rn>
-
- STRB <Rt>, [<Rn>, <Rm> {, LSL #<shift>}]
 */
 
 
 enum InstructionArgument {
     case register(Register)
+    case specialRegister(SpecialRegister)
     case registerList(UInt16)
     case immediate(UInt16)
     case number(Int)
-    case literal(String)
-    case lab(Register)
+    case labelLiteral(String)
+    case numberLiteral(Int)
+    case label(String)
 }
 
 public struct InstructionDescriptor {
@@ -203,8 +178,13 @@ extension Parser {
         case .LDRSB: return try LDRSB(desc)
         case .STR: return try STR(desc)
         case .STRH: return try STRH(desc)
+        case .STRB: return try STRB(desc)
         case .STM: return try STM(desc)
-
+        case .PUSH: return try PUSH(desc)
+        case .MRS: return try MRS(desc)
+        case .MSR: return try MSR(desc)
+        case .LDR: return try LDR(desc)
+            
         case .NOP: return try NOP(desc)
         case .SEV: return try SEV(desc)
         case .WFE: return try WFE(desc)
@@ -232,6 +212,11 @@ extension Parser {
                 if peek().kind == .comma { advance() }
             }
 
+            if peek().kind.isSpecialRegister {
+                list.append(.specialRegister(advance().kind.specialRegisterValue!))
+                if peek().kind == .comma { advance() }
+            }
+
             if peek().kind == .leftBrace {
                 list.append(.registerList(try registerList()))
             }
@@ -249,11 +234,35 @@ extension Parser {
     private func registerList() throws -> UInt16 {
         try consume({$0 == .leftBrace}, "Register list should start with `{`.")
         var result: UInt16 = 0
+        var startReg: UInt16?
         while true {
             guard !atInstructionEnd() else { throw ParserError.tokenExpected(.rightBrace) }
             if peek().kind == .rightBrace {
                 advance()
+                if let _startReg = startReg {
+                    result |= (1 << _startReg)
+                }
                 return result
+            }
+
+            if peek().kind.isRegister, let reg = peek().kind.registerValue {
+                advance()
+                if let _startReg = startReg {
+                    for i in _startReg...reg.number {
+                        result |= (1 << i)
+                    }
+                    startReg = nil
+                } else {
+                    startReg = reg.number
+                    if peek().kind == .minus { advance() }
+                }
+                if peek().kind == .comma {
+                    if let _startReg = startReg {
+                        result |= (1 << _startReg)
+                    }
+                    startReg = nil
+                    advance()
+                }
             }
         }
     }

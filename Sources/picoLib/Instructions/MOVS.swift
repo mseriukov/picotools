@@ -1,3 +1,13 @@
+#warning("TODO:")
+//MOVS <Rd>, #<const>
+//MOVS <Rd>,<Rm>,ASR #<n>
+//MOVS <Rd>,<Rm>,LSL #<n>
+//MOVS <Rd>,<Rm>,LSR #<n>
+//MOVS <Rd>,<Rm>,ASR <Rs>
+//MOVS <Rd>,<Rm>,LSL <Rs>
+//MOVS <Rd>,<Rm>,LSR <Rs>
+//MOVS <Rd>,<Rm>,ROR <Rs>
+
 public struct MOVS: Instruction {
     enum Kind {
         case MOVS(Register, Register)

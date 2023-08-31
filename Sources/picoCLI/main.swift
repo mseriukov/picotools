@@ -2,7 +2,10 @@ import Foundation
 import picoLib
 
 let source = """
+    strh r2, [r3, #42]
     add r0, sp, #40
+    mrs r1, PRIMASK
+    msr CONTROL, r8
 main:
     YIELD               ; This is a comment
     ADD r0, r0
@@ -53,6 +56,8 @@ main:
     SUBS r1, r2, #42
     SUBS r1, r2, r3
     SUB r13, r13, #40
+    push {r1-r7, r13}
+    push {r0-r1,r2-r3}
 """
 
 let scanner = Scanner(source: source)

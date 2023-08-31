@@ -1,6 +1,7 @@
 public struct LDRB: Instruction {
     enum Kind {
-        case LDRB(Register, Register, Register)
+        case LDRB_Immediate(Register, Register, UInt16)
+        case LDRB_Register(Register, Register, Register)
     }
     private let kind: Kind
     private let desc: InstructionDescriptor
@@ -11,17 +12,29 @@ public struct LDRB: Instruction {
         guard desc.condition == nil else { throw ParserError.unexpectedCondition }
         guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier }
 
-        guard desc.arguments.count == 3 else { throw ParserError.unexpectedNumberOfArguments }
+        guard desc.arguments.count >= 2 else { throw ParserError.unexpectedNumberOfArguments }
         guard case let .register(r1) = desc.arguments[0] else { throw ParserError.unexpectedError }
         guard case let .register(r2) = desc.arguments[1] else { throw ParserError.unexpectedError }
-        guard case let .register(r3) = desc.arguments[2] else { throw ParserError.unexpectedError }
-        self.kind = .LDRB(r1, r2, r3)
+
+        if case let .register(r3) = desc.arguments[2] {
+            self.kind = .LDRB_Register(r1, r2, r3)
+            return
+        }
+
+        if case let .immediate(imm) = desc.arguments[2] {
+            self.kind = .LDRB_Immediate(r1, r2, imm)
+            return
+        }
+
+        throw ParserError.unexpectedError
     }
 
     public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
         switch kind {
-        case let .LDRB(r1, r2, r3):
+        case let .LDRB_Register(r1, r2, r3):
             return Thumb.LDRB_Register(t: r1.number, n: r2.number, m: r3.number).encode()
+        case let .LDRB_Immediate(r1, r2, imm):
+            return Thumb.LDRB_Immediate(t: r1.number, n: r2.number, imm5: imm).encode()
         }
     }
 }

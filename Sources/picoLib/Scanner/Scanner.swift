@@ -26,6 +26,7 @@ public struct Token {
         case number(Int)
         case opcode(Mnemonic, Condition?, Qualifier?)
         case register(Register)
+        case specialRegister(SpecialRegister)
 
         var isString: Bool {
             if case .string = self  {
@@ -75,6 +76,14 @@ public struct Token {
             }
         }
 
+        var isSpecialRegister: Bool {
+            if case .specialRegister = self  {
+                return true
+            } else {
+                return false
+            }
+        }
+
         var stringValue: String? {
             switch self {
             case let .string(val): return val
@@ -101,6 +110,13 @@ public struct Token {
         var registerValue: Register? {
             switch self {
             case let .register(val): return val
+            default: return nil
+            }
+        }
+
+        var specialRegisterValue: SpecialRegister? {
+            switch self {
+            case let .specialRegister(val): return val
             default: return nil
             }
         }
@@ -134,6 +150,12 @@ public struct Token {
                 self = .register(register)
                 return
             }
+
+            if let register = SpecialRegister(rawValue: string) {
+                self = .specialRegister(register)
+                return
+            }
+
             guard let kind = Self.keywordMap[string] else { return nil }
             self = kind
         }
@@ -362,6 +384,7 @@ extension Token.Kind: CustomDebugStringConvertible {
         case .newline: return "NEWLINE"
         case let .opcode(m, c, q): return "OPCODE(\(m.stringValue)\(c?.stringValue ?? "")\(q?.stringValue ?? ""))"
         case let .register(val): return "REG(\(val))"
+        case let .specialRegister(val): return "SREG(\(val))"
         case let .comment(val): return "COMMENT(\(val))"
         }
     }
