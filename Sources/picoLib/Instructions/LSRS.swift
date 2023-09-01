@@ -23,7 +23,7 @@ public struct LSRS: Instruction {
         }
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .LSR_Immediate(r1, r2, imm):
             return Thumb.LSR_Immediate(d: r1.number, m: r2.number, imm5: imm).encode()

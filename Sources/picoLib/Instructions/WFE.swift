@@ -14,7 +14,7 @@ public struct WFE: Instruction {
         self.kind = .WFE
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case .WFE:
             return Thumb.WFE().encode()

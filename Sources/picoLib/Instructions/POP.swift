@@ -17,7 +17,7 @@ public struct POP: Instruction {
         self.kind = .POP(list)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .POP(list):
             // TODO: Verify register range.

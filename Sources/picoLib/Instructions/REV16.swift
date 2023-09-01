@@ -17,7 +17,7 @@ public struct REV16: Instruction {
         self.kind = .REV16(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .REV16(r1, r2):
             return Thumb.REV16(d: r1.number, m: r2.number).encode()

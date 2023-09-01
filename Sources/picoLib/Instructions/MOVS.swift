@@ -27,7 +27,7 @@ public struct MOVS: Instruction {
         self.kind = .MOVS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .MOVS(r1, r2):
             return Thumb.MOV_Register_T2(d: r1.number, m: r2.number).encode()

@@ -32,7 +32,7 @@ public struct CMP: Instruction {
 
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .CMP_Register_T1(r1, r2):
             return Thumb.CMP_Register_T1(n: r1.number, m: r2.number).encode()

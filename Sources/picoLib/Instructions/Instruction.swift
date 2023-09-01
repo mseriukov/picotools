@@ -1,3 +1,3 @@
 public protocol Instruction {
-    func encode(symbols: [String: UInt16]) throws -> [UInt16]
+    func encode(symbols: [String: Int]) throws -> [UInt16]
 }

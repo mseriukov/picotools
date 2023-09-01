@@ -14,7 +14,7 @@ public struct SEV: Instruction {
         self.kind = .SEV
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case .SEV:
             return Thumb.SEV().encode()

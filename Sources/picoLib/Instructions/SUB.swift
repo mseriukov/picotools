@@ -19,7 +19,7 @@ public struct SUB: Instruction {
         self.kind = .SUB(r1, r2, imm)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .SUB(_, _, imm):
             return Thumb.SUB_SP_Immediate(imm7: imm).encode()

@@ -17,7 +17,7 @@ public struct CMN: Instruction {
         self.kind = .CMN(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .CMN(r1, r2):
             return Thumb.CMN_Register(n: r1.number, m: r2.number).encode()

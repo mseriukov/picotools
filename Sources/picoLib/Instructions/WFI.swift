@@ -14,7 +14,7 @@ public struct WFI: Instruction {
         self.kind = .WFI
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case .WFI:
             return Thumb.WFI().encode()

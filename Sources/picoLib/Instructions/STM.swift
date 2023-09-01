@@ -17,7 +17,7 @@ public struct STM: Instruction {
         self.kind = .STM(r, list)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .STM(r, regList):
             return Thumb.STM(n: r.number, registerList: regList).encode()

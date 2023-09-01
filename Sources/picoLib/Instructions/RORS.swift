@@ -18,7 +18,7 @@ public struct RORS: Instruction {
         self.kind = .ROR_Register(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .ROR_Register(r1, r2):
             return Thumb.ROR_Register(dn: r1.number, m: r2.number).encode()

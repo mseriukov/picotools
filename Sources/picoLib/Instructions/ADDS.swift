@@ -40,7 +40,7 @@ public struct ADDS: Instruction {
         throw ParserError.unexpectedError
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .ADD_Immediate_T1(r1, r2, imm):
             return Thumb.ADD_Immediate_T1(d: r1.number, n: r2.number, imm3: imm).encode()

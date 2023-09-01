@@ -29,7 +29,7 @@ public struct LDRB: Instruction {
         throw ParserError.unexpectedError
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .LDRB_Register(r1, r2, r3):
             return Thumb.LDRB_Register(t: r1.number, n: r2.number, m: r3.number).encode()

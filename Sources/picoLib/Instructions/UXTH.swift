@@ -17,7 +17,7 @@ public struct UXTH: Instruction {
         self.kind = .UXTH(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .UXTH(r1, r2):
             return Thumb.UXTH(d: r1.number, m: r2.number).encode()

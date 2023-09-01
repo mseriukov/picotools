@@ -15,7 +15,7 @@ public struct ISB: Instruction {
         self.kind = .ISB(opt)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .ISB(opt):
             return Thumb.ISB(option: opt).encode()

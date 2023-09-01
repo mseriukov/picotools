@@ -17,7 +17,7 @@ public struct SXTH: Instruction {
         self.kind = .SXTH(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .SXTH(r1, r2):
             return Thumb.SXTH(d: r1.number, m: r2.number).encode()

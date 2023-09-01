@@ -15,7 +15,7 @@ public struct SVC: Instruction {
         self.kind = .SVC(imm)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .SVC(imm):
             return Thumb.SVC(imm8: imm).encode()

@@ -17,7 +17,7 @@ public struct PUSH: Instruction {
         self.kind = .PUSH(list)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .PUSH(list):
             // TODO: Verify register range.

@@ -17,7 +17,7 @@ public struct EORS: Instruction {
         self.kind = .EORS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .EORS(r1, r2):
             return Thumb.EOR_Register(dn: r1.number, m: r2.number).encode()

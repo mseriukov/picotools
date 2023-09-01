@@ -15,7 +15,7 @@ public struct DMB: Instruction {
         self.kind = .DMB(opt)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .DMB(opt):
             return Thumb.DMB(option: opt).encode()

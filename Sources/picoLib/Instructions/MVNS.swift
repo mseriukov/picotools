@@ -17,7 +17,7 @@ public struct MVNS: Instruction {
         self.kind = .MVNS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .MVNS(r1, r2):
             return Thumb.MVN_Register(d: r1.number, m: r2.number).encode()

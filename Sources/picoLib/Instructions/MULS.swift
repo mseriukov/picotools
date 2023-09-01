@@ -17,7 +17,7 @@ public struct MULS: Instruction {
         self.kind = .MULS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .MULS(r1, r2):
             return Thumb.MUL(n: r1.number, dm: r2.number).encode()

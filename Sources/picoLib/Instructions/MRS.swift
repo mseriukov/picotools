@@ -17,7 +17,7 @@ public struct MRS: Instruction {
         self.kind = .MRS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .MRS(r1, r2):
             return Thumb.MRS(d: r1.number, sysm: r2.number).encode()

@@ -14,7 +14,7 @@ public struct NOP: Instruction {
         self.kind = .NOP
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case .NOP:
             return Thumb.NOP().encode()

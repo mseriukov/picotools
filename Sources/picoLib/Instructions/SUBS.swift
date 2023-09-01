@@ -44,7 +44,7 @@ public struct SUBS: Instruction {
         throw ParserError.unexpectedError
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .SUB_Immediate_T2(r, imm):
             return Thumb.SUB_Immediate_T2(dn: r.number, imm8: imm).encode()

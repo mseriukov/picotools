@@ -18,7 +18,7 @@ public struct MSR: Instruction {
         self.kind = .MSR(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .MSR(r1, r2):
             return Thumb.MSR_Register(sysm: r1.number, n: r2.number).encode()

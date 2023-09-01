@@ -21,7 +21,7 @@ public struct UDF: Instruction {
         }
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .UDF_T1(imm):
             return Thumb.UDF_T1(imm8: imm).encode()

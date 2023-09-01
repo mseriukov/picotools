@@ -59,7 +59,7 @@ public struct ADD: Instruction {
         self.kind = kind
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .ADD_SP_Register_T2(r):
             return Thumb.ADD_SP_Register_T2(m: r.number).encode()

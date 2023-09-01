@@ -1,4 +1,3 @@
-
 /*
  program: statement* EOF
  statement: instruction
@@ -8,20 +7,9 @@
  register: r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8 | r9 | r10 | r11 | r12 | r13 | r14 | r15 | sp | lr | pc
  registerList: '{' register (',' register)? '}'
 
-    ...
- Instruction list:
- ADR <Rd>, <label>
- B{<c>} <label>
-
- BKPT {#}<imm8>
- BL <label>
- BLX <Rm>
- BX <Rm>
-
  LDM <Rn>{!}, <registers>
  STM{IA|EA} <Rn>!, <registers>
 */
-
 
 enum InstructionArgument {
     case register(Register)
@@ -184,6 +172,12 @@ extension Parser {
         case .MRS: return try MRS(desc)
         case .MSR: return try MSR(desc)
         case .LDR: return try LDR(desc)
+        case .ADR: return try ADR(desc)
+        case .BKPT: return try BKPT(desc)
+        case .BLX: return try BLX(desc)
+        case .BX: return try BX(desc)
+        case .B: return try B(desc)
+        case .BL: return try BL(desc)
             
         case .NOP: return try NOP(desc)
         case .SEV: return try SEV(desc)

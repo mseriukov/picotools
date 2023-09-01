@@ -41,7 +41,7 @@ public struct LDR: Instruction {
         throw ParserError.unexpectedError
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .LDR_Immediate_T1(r1, r2, imm):
             return Thumb.LDR_Immediate_T1(t: r1.number, n: r2.number, imm5: imm).encode()
@@ -49,7 +49,7 @@ public struct LDR: Instruction {
             return Thumb.LDR_Immediate_T2(t: r1.number, imm8: imm).encode()
         case let .LDR_Literal(r1, label):
             guard let offset = symbols[label] else { throw ParserError.undefinedLiteral(label) }
-            return Thumb.LDR_Literal(t: r1.number, offset: offset).encode()
+            return Thumb.LDR_Literal(t: r1.number, offset: UInt16(offset)).encode()
         case let .LDR_Register(r1, r2, r3):
             return Thumb.LDR_Register(t: r1.number, n: r2.number, m: r3.number).encode()
         }

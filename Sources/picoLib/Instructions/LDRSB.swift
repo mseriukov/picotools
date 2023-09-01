@@ -18,7 +18,7 @@ public struct LDRSB: Instruction {
         self.kind = .LDRSB(r1, r2, r3)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .LDRSB(r1, r2, r3):
             return Thumb.LDRSB_Register(t: r1.number, n: r2.number, m: r3.number).encode()

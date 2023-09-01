@@ -17,7 +17,7 @@ public struct ANDS: Instruction {
         self.kind = .ANDS(r1, r2)
     }
 
-    public func encode(symbols: [String: UInt16]) throws -> [UInt16] {
+    public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .ANDS(r1, r2):
             return Thumb.AND_Register(dn: r1.number, m: r2.number).encode()
