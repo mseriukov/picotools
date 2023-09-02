@@ -7,8 +7,6 @@
  register: r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8 | r9 | r10 | r11 | r12 | r13 | r14 | r15 | sp | lr | pc
  registerList: '{' register (',' register)? '}'
 
- LDM <Rn>{!}, <registers>
- STM{IA|EA} <Rn>!, <registers>
 */
 
 enum InstructionArgument {
@@ -167,6 +165,7 @@ extension Parser {
         case .STR: return try STR(desc)
         case .STRH: return try STRH(desc)
         case .STRB: return try STRB(desc)
+        case .LDM: return try LDM(desc)
         case .STM: return try STM(desc)
         case .PUSH: return try PUSH(desc)
         case .MRS: return try MRS(desc)
