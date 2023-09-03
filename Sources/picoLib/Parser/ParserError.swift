@@ -1,4 +1,4 @@
-enum ParserError: Error {
+enum ParserErrorKind {
     case unexpectedError
     case undefinedLiteral(String)
     case assertionFailure(String)
@@ -6,4 +6,14 @@ enum ParserError: Error {
     case unexpectedQualifier
     case unexpectedNumberOfArguments
     case tokenExpected(Token.Kind)
+}
+
+struct ParserError: Error {
+    let token: Token
+    let kind: ParserErrorKind
+
+    init(token: Token, kind: ParserErrorKind) {
+        self.token = token
+        self.kind = kind
+    }
 }
