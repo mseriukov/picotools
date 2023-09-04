@@ -9,10 +9,10 @@ public struct UDF: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .UDF else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier }
+        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
+        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
 
-        guard case let .immediate(imm) = desc.arguments[0] else { throw ParserError.unexpectedError }
+        guard case let .immediate(imm) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
         let uimm = UInt16(imm)
         if uimm < 256 {
             self.kind = .UDF_T1(uimm)

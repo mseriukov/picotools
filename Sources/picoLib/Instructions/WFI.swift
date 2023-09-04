@@ -8,8 +8,8 @@ public struct WFI: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .WFI else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier }
+        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
+        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
 
         self.kind = .WFI
     }

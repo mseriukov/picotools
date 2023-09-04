@@ -10,18 +10,18 @@ public struct STR: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .STR else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier }
+        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
+        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
 
-        guard desc.arguments.count >= 1 else { throw ParserError.unexpectedNumberOfArguments }
-        guard case let .register(r1) = desc.arguments[0] else { throw ParserError.unexpectedError }
+        guard desc.arguments.count >= 1 else { throw ParserError.unexpectedNumberOfArguments(at: desc.startToken) }
+        guard case let .register(r1) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
 
         if case let .immediate(imm) = desc.arguments[1] {
             self.kind = .STR_Immediate_T2(r1, imm)
             return
         }
 
-        guard case let .register(r2) = desc.arguments[1] else { throw ParserError.unexpectedError }
+        guard case let .register(r2) = desc.arguments[1] else { throw ParserError.unexpectedError(at: desc.startToken) }
 
         if case let .immediate(imm) = desc.arguments[2] {
             self.kind = .STR_Immediate_T1(r1, r2, imm)
@@ -33,7 +33,7 @@ public struct STR: Instruction {
             return
         }
 
-        throw ParserError.unexpectedError
+        throw ParserError.unexpectedError(at: desc.startToken)
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {

@@ -12,8 +12,8 @@ public struct ADD: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .ADD else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier }
+        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
+        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
 
         let kind: Kind
         switch desc.arguments.count {
@@ -21,7 +21,7 @@ public struct ADD: Instruction {
             guard
                 case let .register(r1) = desc.arguments[0],
                 case let .register(r2) = desc.arguments[1]
-            else { throw ParserError.unexpectedError }
+            else { throw ParserError.unexpectedError(at: desc.startToken) }
 
             if r1.number == Register.sp.number {
                 kind = .ADD_SP_Register_T2(r1)
@@ -33,17 +33,17 @@ public struct ADD: Instruction {
             guard
                 case let .register(r1) = desc.arguments[0],
                 case let .register(r2) = desc.arguments[1]
-            else { throw ParserError.unexpectedError }
+            else { throw ParserError.unexpectedError(at: desc.startToken) }
 
             if case let .register(r3) = desc.arguments[2] {
                 guard r1 == r3, r2.number == Register.sp.number else {
-                    throw ParserError.unexpectedError
+                    throw ParserError.unexpectedError(at: desc.startToken)
                 }
                 kind = .ADD_SP_Register_T1(r1)
 
             } else if case let .immediate(imm) = desc.arguments[2] {
                 guard r2.number == Register.sp.number else {
-                    throw ParserError.unexpectedError
+                    throw ParserError.unexpectedError(at: desc.startToken)
                 }
                 if r1.number == Register.sp.number {
                     kind = .ADD_SP_Immediate_T2(imm)
@@ -51,10 +51,10 @@ public struct ADD: Instruction {
                     kind = .ADD_SP_Immediate_T1(r1, imm)
                 }
             } else {
-                throw ParserError.unexpectedError
+                throw ParserError.unexpectedError(at: desc.startToken)
             }
         default:
-            throw ParserError.unexpectedError
+            throw ParserError.unexpectedError(at: desc.startToken)
         }
         self.kind = kind
     }

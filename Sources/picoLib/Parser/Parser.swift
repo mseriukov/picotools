@@ -25,6 +25,7 @@ public struct InstructionDescriptor {
     let condition: Condition?
     let qualifier: Qualifier?
     let arguments: [InstructionArgument]
+    let startToken: Token
 }
 
 public class Parser {
@@ -69,7 +70,7 @@ public class Parser {
     @discardableResult
     private func consume(_ condition: (Token.Kind) -> Bool, _ message: String) throws -> Token {
         if check(condition) { return advance() }
-        throw ParserError.assertionFailure(message)
+        throw ParserError.assertionFailure(at: peek(), message: message)
     }
 }
 
@@ -101,7 +102,8 @@ extension Parser {
             mnemonic: opcode.0,
             condition: opcode.1,
             qualifier: opcode.2,
-            arguments: try argumentList()
+            arguments: try argumentList(),
+            startToken: token
         )
 
         let instruction = try instruction(desc)
@@ -193,25 +195,30 @@ extension Parser {
             if peek().kind.isNumber {
                 list.append(.number(advance().kind.intValue!))
                 if peek().kind == .comma { advance() }
+                continue
             }
 
             if peek().kind == .hash {
                 list.append(.immediate(try immediate()))
                 if peek().kind == .comma { advance() }
+                continue
             }
 
             if peek().kind.isRegister {
                 list.append(.register(advance().kind.registerValue!))
                 if peek().kind == .comma { advance() }
+                continue
             }
 
             if peek().kind.isSpecialRegister {
                 list.append(.specialRegister(advance().kind.specialRegisterValue!))
                 if peek().kind == .comma { advance() }
+                continue
             }
 
             if peek().kind == .leftBrace {
                 list.append(.registerList(try registerList()))
+                continue
             }
 
             let ignored: [Token.Kind] = [
@@ -219,7 +226,11 @@ extension Parser {
                 .leftBracket,
                 .exclamationMark
             ]
-            if ignored.contains(where: { $0 == peek().kind }) { advance() }
+            if ignored.contains(where: { $0 == peek().kind }) {
+                advance()
+                continue
+            }
+            throw ParserError.unexpectedError(at: peek())
         }
         return list
     }
@@ -229,7 +240,7 @@ extension Parser {
         var result: UInt16 = 0
         var startReg: UInt16?
         while true {
-            guard !atInstructionEnd() else { throw ParserError.tokenExpected(.rightBrace) }
+            guard !atInstructionEnd() else { throw ParserError.tokenExpected(at: peek(), expected: .rightBrace) }
             if peek().kind == .rightBrace {
                 advance()
                 if let _startReg = startReg {
