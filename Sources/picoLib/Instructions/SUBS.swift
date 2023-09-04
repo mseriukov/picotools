@@ -10,8 +10,8 @@ public struct SUBS: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .SUBS else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
+        guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
+        guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
         if
             desc.arguments.count == 2,
@@ -41,7 +41,7 @@ public struct SUBS: Instruction {
             self.kind = .SUB_Register(r1, r2, r3)
             return
         }
-        throw ParserError.unexpectedError(at: desc.startToken)
+        throw InstructionError.unknownError
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {

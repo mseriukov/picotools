@@ -8,18 +8,18 @@ public struct BL: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .B else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
+        guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
+        guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 1 else { throw ParserError.unexpectedNumberOfArguments(at: desc.startToken) }
-        guard case let .labelLiteral(lit) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
+        guard desc.arguments.count == 1 else { throw InstructionError.unexpectedNumberOfArguments }
+        guard case let .labelLiteral(lit) = desc.arguments[0] else { throw InstructionError.unknownError }
         self.kind = .BL(lit)
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .BL(literal):
-            guard let offset = symbols[literal] else { throw ParserError.undefinedLiteral(at: desc.startToken, literal: literal) }
+            guard let offset = symbols[literal] else { throw InstructionError.undefinedLiteral(literal) }
             return Thumb.BL(offset: Int32(offset)).encode()
         }
     }

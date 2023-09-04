@@ -9,12 +9,12 @@ public struct B: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .B else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
+        guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
         let condition = desc.condition ?? .always
 
 
-        guard desc.arguments.count == 1 else { throw ParserError.unexpectedNumberOfArguments(at: desc.startToken) }
-        guard case let .labelLiteral(lit) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
+        guard desc.arguments.count == 1 else { throw InstructionError.unexpectedNumberOfArguments }
+        guard case let .labelLiteral(lit) = desc.arguments[0] else { throw InstructionError.unknownError }
 
         if condition == .always {
             self.kind = .B_T2(lit)
@@ -26,11 +26,11 @@ public struct B: Instruction {
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
         switch kind {
         case let .B_T1(literal):
-            guard let offset = symbols[literal] else { throw ParserError.undefinedLiteral(at: desc.startToken, literal: literal) }
+            guard let offset = symbols[literal] else { throw InstructionError.undefinedLiteral(literal) }
             return Thumb.B_T1(cond: UInt16((desc.condition ?? .always).rawValue), imm8: Int16(offset)).encode()
 
         case let .B_T2(literal):
-            guard let offset = symbols[literal] else { throw ParserError.undefinedLiteral(at: desc.startToken, literal: literal) }
+            guard let offset = symbols[literal] else { throw InstructionError.undefinedLiteral(literal) }
             return Thumb.B_T2(imm11: Int16(offset)).encode()
         }
     }

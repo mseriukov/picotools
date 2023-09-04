@@ -70,16 +70,24 @@ public class Parser {
     @discardableResult
     private func consume(_ condition: (Token.Kind) -> Bool, _ message: String) throws -> Token {
         if check(condition) { return advance() }
-        throw ParserError.assertionFailure(at: peek(), message: message)
+        throw ParserError.assertionFailure(message)
     }
 }
 
 extension Parser {
     public func parse() throws -> [Statement] {
         var statements: [Statement] = []
-
         while !isAtEnd() {
-            statements.append(try statement())
+            do {
+                statements.append(try statement())
+            } catch {
+                let token = peek()
+                print("Error at line \(token.line) near \(token.lexeme ?? ""). \(error.localizedDescription)")
+                // Ignore the rest of the string.
+                while peek().kind != .newline { advance() }
+                advance()
+                continue
+            }
         }
         return statements
     }
@@ -105,6 +113,7 @@ extension Parser {
             arguments: try argumentList(),
             startToken: token
         )
+
 
         let instruction = try instruction(desc)
 
@@ -230,7 +239,7 @@ extension Parser {
                 advance()
                 continue
             }
-            throw ParserError.unexpectedError(at: peek())
+            throw ParserError.unknownError
         }
         return list
     }
@@ -240,7 +249,7 @@ extension Parser {
         var result: UInt16 = 0
         var startReg: UInt16?
         while true {
-            guard !atInstructionEnd() else { throw ParserError.tokenExpected(at: peek(), expected: .rightBrace) }
+            guard !atInstructionEnd() else { throw ParserError.tokenExpected(.rightBrace) }
             if peek().kind == .rightBrace {
                 advance()
                 if let _startReg = startReg {

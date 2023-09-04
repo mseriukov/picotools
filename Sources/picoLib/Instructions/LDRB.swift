@@ -9,12 +9,12 @@ public struct LDRB: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .LDRB else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
+        guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
+        guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count >= 2 else { throw ParserError.unexpectedNumberOfArguments(at: desc.startToken) }
-        guard case let .register(r1) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
-        guard case let .register(r2) = desc.arguments[1] else { throw ParserError.unexpectedError(at: desc.startToken) }
+        guard desc.arguments.count >= 2 else { throw InstructionError.unexpectedNumberOfArguments }
+        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
+        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
 
         if case let .register(r3) = desc.arguments[2] {
             self.kind = .LDRB_Register(r1, r2, r3)
@@ -26,7 +26,7 @@ public struct LDRB: Instruction {
             return
         }
 
-        throw ParserError.unexpectedError(at: desc.startToken)
+        throw InstructionError.unknownError
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {

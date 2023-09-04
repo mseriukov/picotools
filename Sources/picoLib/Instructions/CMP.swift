@@ -10,11 +10,11 @@ public struct CMP: Instruction {
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
         guard desc.mnemonic == .CMP else { fatalError("Mnemonic doesn't match the expected one.") }
-        guard desc.condition == nil else { throw ParserError.unexpectedCondition(at: desc.startToken) }
-        guard desc.qualifier == nil else { throw ParserError.unexpectedQualifier(at: desc.startToken) }
+        guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
+        guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 2 else { throw ParserError.unexpectedNumberOfArguments(at: desc.startToken) }
-        guard case let .register(r1) = desc.arguments[0] else { throw ParserError.unexpectedError(at: desc.startToken) }
+        guard desc.arguments.count == 2 else { throw InstructionError.unexpectedNumberOfArguments }
+        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
 
         if case let .register(r2) = desc.arguments[1] {
             // TODO: Verify necessary conditions.
@@ -27,7 +27,7 @@ public struct CMP: Instruction {
         } else if case let .immediate(imm) = desc.arguments[1] {
             kind = .CMP_Immediate(r1, imm)
         } else {
-            throw ParserError.unexpectedError(at: desc.startToken)
+            throw InstructionError.unknownError
         }
 
     }
