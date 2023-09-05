@@ -22,3 +22,12 @@ public struct DMB: Instruction {
         }
     }
 }
+
+extension DMB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .DMB(opt):
+            return "\(desc.mnemonic.stringValue) #\(opt)"
+        }
+    }
+}

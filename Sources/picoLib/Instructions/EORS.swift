@@ -24,3 +24,12 @@ public struct EORS: Instruction {
         }
     }
 }
+
+extension EORS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .EORS(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue) \(r2.rawValue)"
+        }
+    }
+}

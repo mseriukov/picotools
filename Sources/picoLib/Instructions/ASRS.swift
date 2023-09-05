@@ -32,3 +32,14 @@ public struct ASRS: Instruction {
         }
     }
 }
+
+extension ASRS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .ASR_Immediate(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), #\(imm)"
+        case let .ASR_Register(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

@@ -25,3 +25,12 @@ public struct RSBS: Instruction {
         }
     }
 }
+
+extension RSBS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .RSB_Immediate(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

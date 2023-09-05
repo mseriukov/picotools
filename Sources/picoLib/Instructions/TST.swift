@@ -24,3 +24,12 @@ public struct TST: Instruction {
         }
     }
 }
+
+extension TST: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .TST(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

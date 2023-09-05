@@ -55,3 +55,18 @@ public struct LDR: Instruction {
         }
     }
 }
+
+extension LDR: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .LDR_Immediate_T1(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), #\(imm)]"
+        case let .LDR_Immediate_T2(r1, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [SP, #\(imm)]"
+        case let .LDR_Literal(r1, label):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(label)"
+        case let .LDR_Register(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), \(r3.rawValue)]"
+        }
+    }
+}

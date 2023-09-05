@@ -24,3 +24,12 @@ public struct MVNS: Instruction {
         }
     }
 }
+
+extension MVNS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .MVNS(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

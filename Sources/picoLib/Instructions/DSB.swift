@@ -24,3 +24,12 @@ public struct DSB: Instruction {
         }
     }
 }
+
+extension DSB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .DSB(opt):
+            return "\(desc.mnemonic.stringValue) #\(opt)"
+        }
+    }
+}

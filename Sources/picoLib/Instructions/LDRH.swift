@@ -38,3 +38,15 @@ public struct LDRH: Instruction {
         }
     }
 }
+
+extension LDRH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .LDRH_Register(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), \(r3.rawValue)]"
+        case let .LDRH_Immediate(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), #\(imm)]"
+        }
+    }
+}
+

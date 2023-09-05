@@ -24,3 +24,12 @@ public struct CMN: Instruction {
         }
     }
 }
+
+extension CMN: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .CMN(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue) \(r2.rawValue)"
+        }
+    }
+}

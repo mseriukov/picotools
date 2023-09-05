@@ -30,3 +30,14 @@ public struct UDF: Instruction {
         }
     }
 }
+
+extension UDF: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .UDF_T1(imm):
+            return "\(desc.mnemonic.stringValue) #\(imm)"
+        case let .UDF_T2(imm):
+            return "\(desc.mnemonic.stringValue) #\(imm)"
+        }
+    }
+}

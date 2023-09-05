@@ -24,3 +24,12 @@ public struct SXTH: Instruction {
         }
     }
 }
+
+extension SXTH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .SXTH(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

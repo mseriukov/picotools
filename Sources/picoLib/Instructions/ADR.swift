@@ -13,7 +13,7 @@ public struct ADR: Instruction {
 
         guard desc.arguments.count == 2 else { throw InstructionError.unexpectedNumberOfArguments }
         guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
-        guard case let .labelLiteral(lit) = desc.arguments[1] else { throw InstructionError.unknownError }
+        guard case let .label(lit) = desc.arguments[1] else { throw InstructionError.unknownError }
         self.kind = .ADR(r1, lit)
     }
 

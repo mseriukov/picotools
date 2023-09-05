@@ -43,3 +43,16 @@ public struct CMP: Instruction {
         }
     }
 }
+
+extension CMP: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .CMP_Register_T1(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue) \(r2.rawValue)"
+        case let .CMP_Register_T2(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue) \(r2.rawValue)"
+        case let .CMP_Immediate(r, imm):
+            return "\(desc.mnemonic.stringValue) \(r.rawValue) #\(imm)"
+        }
+    }
+}

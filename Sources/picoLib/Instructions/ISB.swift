@@ -22,3 +22,12 @@ public struct ISB: Instruction {
         }
     }
 }
+
+extension ISB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .ISB(opt):
+            return "\(desc.mnemonic.stringValue) #\(opt)"
+        }
+    }
+}

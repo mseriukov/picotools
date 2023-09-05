@@ -15,7 +15,6 @@ enum InstructionArgument {
     case registerList(UInt16)
     case immediate(UInt16)
     case number(Int)
-    case labelLiteral(String)
     case numberLiteral(Int)
     case label(String)
 }
@@ -84,7 +83,7 @@ extension Parser {
                 let token = peek()
                 print("Error at line \(token.line) near \(token.lexeme ?? ""). \(error.localizedDescription)")
                 // Ignore the rest of the string.
-                while peek().kind != .newline { advance() }
+                while peek().kind != .newline && !isAtEnd() { advance() }
                 advance()
                 continue
             }
@@ -221,6 +220,12 @@ extension Parser {
 
             if peek().kind.isSpecialRegister {
                 list.append(.specialRegister(advance().kind.specialRegisterValue!))
+                if peek().kind == .comma { advance() }
+                continue
+            }
+
+            if peek().kind.isIdentifier {
+                list.append(.label(advance().kind.stringValue!))
                 if peek().kind == .comma { advance() }
                 continue
             }

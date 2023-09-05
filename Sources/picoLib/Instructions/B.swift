@@ -14,7 +14,7 @@ public struct B: Instruction {
 
 
         guard desc.arguments.count == 1 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .labelLiteral(lit) = desc.arguments[0] else { throw InstructionError.unknownError }
+        guard case let .label(lit) = desc.arguments[0] else { throw InstructionError.unknownError }
 
         if condition == .always {
             self.kind = .B_T2(lit)
@@ -40,9 +40,9 @@ extension B: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch kind {
         case let .B_T1(lit):
-            return "\(desc.mnemonic.stringValue)\(desc.condition ?? .always) \(lit)"
+            return "\(desc.mnemonic.stringValue)\((desc.condition ?? .always).stringValue) \(lit)"
         case let .B_T2(lit):
-            return "\(desc.mnemonic.stringValue)\(desc.condition ?? .always) \(lit)"
+            return "\(desc.mnemonic.stringValue)\((desc.condition ?? .always).stringValue) \(lit)"
         }
     }
 }

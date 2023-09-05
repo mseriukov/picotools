@@ -32,3 +32,14 @@ public struct LSRS: Instruction {
         }
     }
 }
+
+extension LSRS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .LSR_Immediate(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), \(imm)"
+        case let .LSR_Register(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

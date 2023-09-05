@@ -19,7 +19,7 @@ main:
     CMP r5, #42
     ANDS r3, r7
     DMB #42
-    DSB #43, wer
+    DSB #43
     ISB #44
     CMN r4, r5
     MOV r1, r2
@@ -58,6 +58,7 @@ main:
     SUB r13, r13, #40
     push {r1-r7, r13}
     push {r0-r1,r2-r3}
+    b main
 """
 
 let scanner = Scanner(source: source)

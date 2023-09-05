@@ -55,3 +55,16 @@ public struct SUBS: Instruction {
         }
     }
 }
+
+extension SUBS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .SUB_Immediate_T2(r, imm):
+            return "\(desc.mnemonic.stringValue) \(r.rawValue), #\(imm)"
+        case let .SUB_Immediate_T1(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), #\(imm)"
+        case let .SUB_Register(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), \(r3.rawValue)"
+        }
+    }
+}

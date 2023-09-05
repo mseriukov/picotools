@@ -38,3 +38,14 @@ public struct STRH: Instruction {
         }
     }
 }
+
+extension STRH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .STRH_Register(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), \(r3.rawValue)"
+        case let .STRH_Immediate(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), #\(imm)"
+        }
+    }
+}

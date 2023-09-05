@@ -24,3 +24,12 @@ public struct BICS: Instruction {
         }
     }
 }
+
+extension BICS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .BICS(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue) \(r2.rawValue)"
+        }
+    }
+}

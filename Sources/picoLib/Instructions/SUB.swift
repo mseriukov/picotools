@@ -26,3 +26,12 @@ public struct SUB: Instruction {
         }
     }
 }
+
+extension SUB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .SUB(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), #\(imm)"
+        }
+    }
+}

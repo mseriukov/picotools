@@ -22,3 +22,12 @@ public struct SVC: Instruction {
         }
     }
 }
+
+extension SVC: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .SVC(imm):
+            return "\(desc.mnemonic.stringValue) #\(imm)"
+        }
+    }
+}

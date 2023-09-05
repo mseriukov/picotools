@@ -24,3 +24,12 @@ public struct ANDS: Instruction {
         }
     }
 }
+
+extension ANDS: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .ANDS(r1, r2):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue)"
+        }
+    }
+}

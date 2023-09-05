@@ -25,3 +25,12 @@ public struct LDRSH: Instruction {
         }
     }
 }
+
+extension LDRSH: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .LDRSH(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), \(r2.rawValue), \(r3.rawValue)"
+        }
+    }
+}

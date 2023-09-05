@@ -38,3 +38,14 @@ public struct LDRB: Instruction {
         }
     }
 }
+
+extension LDRB: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case let .LDRB_Register(r1, r2, r3):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), \(r3.rawValue)]"
+        case let .LDRB_Immediate(r1, r2, imm):
+            return "\(desc.mnemonic.stringValue) \(r1.rawValue), [\(r2.rawValue), #\(imm)]"
+        }
+    }
+}
