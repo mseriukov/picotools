@@ -170,7 +170,7 @@ public struct Token {
     public let line: Int
 }
 
-public class Scanner {
+public class Lexer {
     private let source: String
     private var tokens: [Token] = []
     private var start: String.Index
@@ -268,7 +268,7 @@ public class Scanner {
             } else if isAlpha(c) {
                 addToken(try identifier())
             } else {
-                throw ScannerError.unexpectedCharacter(c, line)
+                throw LexerError.unexpectedCharacter(c, line)
             }
         }
     }
@@ -321,7 +321,7 @@ public class Scanner {
         }
 
         if isAtEnd() {
-            throw ScannerError.unterminatedString(line)
+            throw LexerError.unterminatedString(line)
         }
         advance()
         let string = String(source[source.index(after: start)..<source.index(before: current)])
@@ -339,7 +339,7 @@ public class Scanner {
 
         let numStr = String(source[start..<current])
         guard let num = Int(numStr) else {
-            throw ScannerError.invalidNumber(numStr, line)
+            throw LexerError.invalidNumber(numStr, line)
         }
         return .number(num)
     }

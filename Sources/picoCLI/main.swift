@@ -61,10 +61,10 @@ main:
     b main
 """
 
-let scanner = Scanner(source: source)
+let lexer = Lexer(source: source)
 
 do {
-    let parser = Parser(tokens: try scanner.scanTokens())
+    let parser = Parser(tokens: try lexer.scanTokens())
     let statements = try parser.parse()
 
     statements.forEach { print($0) }
