@@ -12,7 +12,7 @@ public struct LDRB: Instruction {
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count >= 2 else { throw InstructionError.unexpectedNumberOfArguments }
+        guard desc.arguments.count == 3 else { throw InstructionError.unexpectedNumberOfArguments }
         guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
         guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
 
