@@ -18,10 +18,8 @@ public struct ADD: Instruction {
         let kind: Kind
         switch desc.arguments.count {
         case 2:
-            guard
-                case let .register(r1) = desc.arguments[0],
-                case let .register(r2) = desc.arguments[1]
-            else { throw InstructionError.unknownError }
+            guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+            guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
 
             if r1.number == Register.sp.number {
                 kind = .ADD_SP_Register_T2(r1)
@@ -30,10 +28,8 @@ public struct ADD: Instruction {
             }
 
         case 3:
-            guard
-                case let .register(r1) = desc.arguments[0],
-                case let .register(r2) = desc.arguments[1]
-            else { throw InstructionError.unknownError }
+            guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+            guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
 
             if case let .register(r3) = desc.arguments[2] {
                 guard r1 == r3, r2.number == Register.sp.number else {
