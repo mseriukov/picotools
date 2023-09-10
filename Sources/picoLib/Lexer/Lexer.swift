@@ -160,9 +160,7 @@ public struct Token {
             self = kind
         }
 
-        static let keywordMap: [String: Self] = [
-            ".eof" : .eof
-        ]
+        static let keywordMap: [String: Self] = [:]
     }
 
     public let kind: Kind
