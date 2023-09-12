@@ -1,7 +1,7 @@
-/// Add with Carry (register) adds a register value, the carry flag value, and an optionally-shifted register value,
-/// and writes the result to the destination register. It updates the condition flags based on the result.
 public struct ADCS: Instruction {
     enum Kind {
+        /// Add with Carry (register) adds a register value, the carry flag value, and an optionally-shifted register value,
+        /// and writes the result to the destination register. It updates the condition flags based on the result.
         case ADCS(Register, Register) // ADCS{<q>} {<Rd>,} <Rn>, <Rm>
     }
     private let kind: Kind
