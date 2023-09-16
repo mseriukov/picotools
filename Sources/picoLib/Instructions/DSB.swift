@@ -7,14 +7,16 @@ public struct DSB: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .DSB else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .DSB else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 1 else { throw InstructionError.unexpectedNumberOfArguments }
-
-        guard case let .immediate(opt) = desc.arguments[0] else { throw InstructionError.unknownError }
-        self.kind = .DSB(opt)
+        if desc.arguments.count == 1 {
+            guard case let .immediate(opt) = desc.arguments[0] else { throw InstructionError.immediateExpected(0) }
+            self.kind = .DSB(opt)
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
