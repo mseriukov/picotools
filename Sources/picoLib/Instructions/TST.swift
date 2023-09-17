@@ -7,14 +7,18 @@ public struct TST: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .TST else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .TST else { throw InstructionError.unexpectedCondition }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 2 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
-        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
-        self.kind = .TST(r1, r2)
+        if desc.arguments.count == 2 {
+            guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+            guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
+            self.kind = .TST(r1, r2)
+            return
+        }
+
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
