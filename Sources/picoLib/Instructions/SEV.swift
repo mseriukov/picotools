@@ -7,11 +7,15 @@ public struct SEV: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .SEV else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .SEV else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        self.kind = .SEV
+        if desc.arguments.count == 0 {
+            self.kind = .SEV
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
