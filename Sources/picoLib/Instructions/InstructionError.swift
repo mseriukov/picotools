@@ -5,6 +5,7 @@ public enum InstructionError: Error {
     case unexpectedQualifier
     case qualifierIsNotSupported(Qualifier)
     case registerExpected(Int)
+    case specialRegisterExpected(Int)
     case pcExpected(Int)
     case labelExpected(Int)
     case immediateExpected(Int)
@@ -25,7 +26,8 @@ extension InstructionError: CustomDebugStringConvertible {
         case .RdRnMismatch: return "Rd doesn't match Rn."
         case .unexpectedNumberOfArguments: return "unexpectedNumberOfArguments"
         case let .undefinedLiteral(literal): return "undefinedLiteral \(literal)"
-        case let .registerExpected(position): return "register expected at argument position \(position)"
+        case let .registerExpected(position): return "register is expected at argument position \(position)"
+        case let .specialRegisterExpected(position): return "special register is expected at argument position \(position)"
         case let .pcExpected(position): return "only PC register can be used at position \(position)"
         case let .labelExpected(position): return "label expected at argument position \(position)"
         case let .immediateExpected(position): return "imeediate expected at argument position \(position)"
