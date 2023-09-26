@@ -8,7 +8,7 @@ public struct LDRH: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .LDRH else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .LDRH else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
@@ -26,7 +26,7 @@ public struct LDRH: Instruction {
             return
         }
 
-        throw InstructionError.unknownError
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
