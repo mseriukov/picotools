@@ -7,7 +7,7 @@ public struct CMN: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .CMN else { throw InstructionError.mnemonicMismatch}
+        guard desc.mnemonic == .CMN else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
