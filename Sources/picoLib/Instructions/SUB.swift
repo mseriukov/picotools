@@ -7,16 +7,19 @@ public struct SUB: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .SUB else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .SUB else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 3 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
-        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
-        guard case let .immediate(imm) = desc.arguments[2] else { throw InstructionError.unknownError }
-        // TODO: Verify r1 and r2.
-        self.kind = .SUB(r1, r2, imm)
+        if desc.arguments.count == 3 {
+            guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+            guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
+            guard case let .immediate(imm) = desc.arguments[2] else { throw InstructionError.immediateExpected(2) }
+            guard r1 == r2 else { throw InstructionError.RdRnMismatch }
+            self.kind = .SUB(r1, r2, imm)
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
