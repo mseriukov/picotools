@@ -7,7 +7,7 @@ public struct BLX: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .BLX else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .BLX else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 

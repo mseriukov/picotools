@@ -7,7 +7,7 @@ public struct ORRS: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .ORRS else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .ORRS else { throw InstructionError.mnemonicMismatch }
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 

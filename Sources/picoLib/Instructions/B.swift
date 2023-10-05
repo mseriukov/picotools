@@ -8,7 +8,7 @@ public struct B: Instruction {
 
     public init(_ desc: InstructionDescriptor) throws {
         self.desc = desc
-        guard desc.mnemonic == .B else { fatalError("Mnemonic doesn't match the expected one.") }
+        guard desc.mnemonic == .B else { throw InstructionError.mnemonicMismatch }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
         let condition = desc.condition ?? .always
 
