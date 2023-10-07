@@ -11,7 +11,11 @@ public struct YIELD: Instruction {
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        self.kind = .YIELD
+        if desc.arguments.count == 0 {
+            self.kind = .YIELD
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
