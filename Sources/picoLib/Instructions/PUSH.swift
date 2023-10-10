@@ -11,10 +11,12 @@ public struct PUSH: Instruction {
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 1 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .registerList(list) = desc.arguments[0] else { throw InstructionError.unknownError }
-
-        self.kind = .PUSH(list)
+        if desc.arguments.count == 1 {
+            guard case let .registerList(list) = desc.arguments[0] else { throw InstructionError.registerListExpected(0) }
+            self.kind = .PUSH(list)
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
