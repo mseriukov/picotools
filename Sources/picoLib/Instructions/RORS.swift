@@ -11,11 +11,14 @@ public struct RORS: Instruction {
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard desc.arguments.count == 2 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
-        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
-
-        self.kind = .ROR_Register(r1, r2)
+        if desc.arguments.count == 2 {
+            guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+            guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
+            guard r1 == r2 else { throw InstructionError.RdRnMismatch }
+            self.kind = .ROR_Register(r1, r2)
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
