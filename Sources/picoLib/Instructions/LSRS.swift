@@ -13,8 +13,8 @@ public struct LSRS: Instruction {
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
         guard desc.arguments.count >= 2 else { throw InstructionError.unexpectedNumberOfArguments }
-        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.unknownError }
-        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.unknownError }
+        guard case let .register(r1) = desc.arguments[0] else { throw InstructionError.registerExpected(0) }
+        guard case let .register(r2) = desc.arguments[1] else { throw InstructionError.registerExpected(1) }
 
         if desc.arguments.count == 3, case let .immediate(imm) = desc.arguments[2] {
             self.kind = .LSR_Immediate(r1, r2, imm)
