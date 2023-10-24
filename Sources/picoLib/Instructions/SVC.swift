@@ -11,8 +11,12 @@ public struct SVC: Instruction {
         guard desc.condition == nil else { throw InstructionError.unexpectedCondition }
         guard desc.qualifier == nil else { throw InstructionError.unexpectedQualifier }
 
-        guard case let .immediate(imm) = desc.arguments[0] else { throw InstructionError.unknownError }
-        self.kind = .SVC(imm)
+        if desc.arguments.count == 1 {
+            guard case let .immediate(imm) = desc.arguments[0] else { throw InstructionError.immediateExpected(0) }
+            self.kind = .SVC(imm)
+            return
+        }
+        throw InstructionError.unexpectedNumberOfArguments
     }
 
     public func encode(symbols: [String: Int]) throws -> [UInt16] {
