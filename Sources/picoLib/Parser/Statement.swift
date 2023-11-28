@@ -41,7 +41,7 @@ extension InstructionStatement: CustomDebugStringConvertible {
             .joined().byAddingRightPadding(10)
         result += "\(instruction)".byAddingRightPadding(20)
         if let comment {
-            result += " \(comment)"
+            result += " \\ \(comment)"
         }
         return result
     }
